@@ -5,6 +5,7 @@ namespace InetStudio\Products\Commands;
 use Illuminate\Console\Command;
 use Sabre\Xml\Reader as XMLReader;
 use Sabre\Xml\Service as XMLService;
+use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
 
@@ -31,6 +32,8 @@ class ProcessGoogleFeeds extends Command
      */
     public function fire()
     {
+        $tempPath = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix();
+
         if (config('products.feeds.google')) {
             foreach (config('products.feeds.google') as $url) {
                 $feedHash = md5($url);
@@ -68,9 +71,24 @@ class ProcessGoogleFeeds extends Command
                     $imageLink = (isset($product['image_link'])) ? $product['image_link'] : ((isset($product['{}image_link'])) ? $product['{}image_link'] : '');
                     if ($imageLink) {
                         if (! $productObj->hasMedia('preview')) {
-                            $img = $this->checkImage($imageLink);
-                            if ($img) {
-                                $productObj->addMediaFromBase64($img)->toMediaCollection('preview', 'products');
+                            $tempFile = $tempPath.'/'.basename($imageLink);
+
+                            $this->grabImage($imageLink, $tempFile);
+
+                            $media = $productObj
+                                ->addMedia($tempFile)
+                                ->withCustomProperties(['source' => $imageLink])
+                                ->toMediaCollection('preview', 'products');
+
+                            $media->custom_properties = [
+                                'processed' => true,
+                                'source' => $imageLink,
+                            ];
+                            $media->save();
+                        } else {
+                            if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
+                                $productObj->clearMediaCollection('preview');
+                                continue;
                             }
                         }
                     }
@@ -90,19 +108,21 @@ class ProcessGoogleFeeds extends Command
         }
     }
 
-    private function checkImage($image_file)
+    private function grabImage($url, $saveto)
     {
-        $img = file_get_contents($image_file);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        $raw = curl_exec($ch);
+        curl_close($ch);
 
-        $ext = strtolower(pathinfo($image_file, PATHINFO_EXTENSION));
-        if ($ext === 'jpg') {
-            $ext = 'jpeg';
-        }
-        $function = 'imagecreatefrom' . $ext;
-        if (function_exists($function) && @$function($img) === FALSE) {
-            return false;
+        if (file_exists($saveto)) {
+            unlink($saveto);
         }
 
-        return base64_encode($img);
+        $fp = fopen($saveto, 'x');
+        fwrite($fp, $raw);
+        fclose($fp);
     }
 }
