@@ -16,7 +16,7 @@ class ProductTransformer extends TransformerAbstract
         return [
             'id' => (int) $product->id,
             'preview' => view('admin.module.products::pages.products.datatables.preview', [
-                'src' => url($product->getFirstMediaUrl('preview', 'preview_thumb')),
+                'src' => url($product->getFirstMediaUrl('preview', 'preview_admin_thumb')),
             ])->render(),
             'title' => $product->title,
             'created_at' => (string) $product->created_at,

@@ -16,7 +16,7 @@ class ProductEmbeddedTransformer extends TransformerAbstract
         return [
             'id' => (int) $product->id,
             'preview' => view('admin.module.products::pages.products.datatables.preview', [
-                'src' => url($product->getFirstMediaUrl('preview', 'preview_thumb')),
+                'src' => url($product->getFirstMediaUrl('preview', 'preview_admin_thumb')),
             ])->render(),
             'brand' => $product->brand,
             'title' => $product->title,
