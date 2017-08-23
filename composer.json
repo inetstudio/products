@@ -1,0 +1,21 @@
+{
+    "name": "inetstudio/products",
+    "description": "Package for products",
+    "homepage": "https://github.com/inetstudio/products",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Konstantin Bukin",
+        "email": "bukin@inetstudio.ru"
+      }
+    ],
+    "require": {
+      "inetstudio/admin-panel": "1.*",
+      "sabre/xml": "^2.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "InetStudio\\Products\\": "src/"
+      }
+    }
+}

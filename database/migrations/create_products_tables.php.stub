@@ -1,0 +1,51 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateProductsTables extends Migration
+{
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('feed_hash')->default('');
+            $table->string('g_id')->default('');
+            $table->string('title')->default('');
+            $table->text('description')->nullable();
+            $table->string('price')->default('');
+            $table->string('condition')->default('');
+            $table->string('availability')->default('');
+            $table->string('brand')->default('');
+            $table->string('product_type')->default('');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('products_links', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('product_id')->unsigned();
+            $table->string('link', 1000);
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        });
+
+        Schema::create('productables', function (Blueprint $table) {
+            $table->integer('product_model_id')->unsigned();
+            $table->integer('productable_id')->unsigned();
+            $table->string('productable_type');
+            $table->timestamps();
+
+            $table->foreign('product_model_id')->references('id')->on('products')->onDelete('cascade');
+        });
+    }
+
+    public function down()
+    {
+        Schema::drop('products');
+        Schema::drop('products_links');
+        Schema::drop('productables');
+    }
+}
