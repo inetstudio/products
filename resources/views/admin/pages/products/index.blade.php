@@ -6,14 +6,16 @@
 
 @section('title', $title)
 
-@section('styles')
+@pushonce('styles:datatables')
     <!-- DATATABLES -->
     <link href="{!! asset('admin/css/plugins/datatables/datatables.min.css') !!}" rel="stylesheet">
-@endsection
+@endpushonce
 
 @section('content')
 
-    @include('admin.module.articles::partials.breadcrumb_index', ['title' => $title])
+    @push('breadcrumbs')
+        @include('admin.module.products::partials.breadcrumbs')
+    @endpush
 
     <div class="wrapper wrapper-content">
         <div class="row">
@@ -30,9 +32,12 @@
     </div>
 @endsection
 
-@section('scripts')
+@pushonce('scripts:datatables')
     <!-- DATATABLES -->
     <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
+@endpushonce
 
+@pushonce('scripts:datatables_products_index')
     {!! $table->scripts() !!}
-@endsection
+@endpushonce
+

@@ -1,32 +1,19 @@
+@extends('admin::layouts.app')
+
 @php
     $title = ($item->id) ? 'Просмотр продукта' : '';
 @endphp
 
-@extends('admin::layouts.app')
-
 @section('title', $title)
 
 @section('content')
-    <div class="row wrapper border-bottom white-bg page-heading">
-        <div class="col-sm-12">
-            <h2>
-                {{ $title }}
-            </h2>
-            <ol class="breadcrumb">
-                <li>
-                    <a href="{{ url('/back/') }}">Главная</a>
-                </li>
-                <li>
-                    <a href="{{ route('back.products.index') }}">Продукты</a>
-                </li>
-                <li class="active">
-                    <strong>
-                        {{ $title }}
-                    </strong>
-                </li>
-            </ol>
-        </div>
-    </div>
+
+    @push('breadcrumbs')
+        @include('admin.module.products::partials.breadcrumbs')
+        <li>
+            <a href="{{ route('back.products.index') }}">Продукты</a>
+        </li>
+    @endpush
 
     <div class="wrapper wrapper-content form-horizontal">
         <div class="row">
