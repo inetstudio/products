@@ -13,7 +13,7 @@ class ProductsServiceProvider extends ServiceProvider
             __DIR__.'/../public' => public_path(),
         ], 'public');
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views/admin', 'admin.module.products');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin.module.products');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         $this->publishes([

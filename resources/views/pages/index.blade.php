@@ -14,7 +14,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.products::partials.products.breadcrumbs')
+        @include('admin.module.products::partials.breadcrumbs')
     @endpush
 
     <div class="wrapper wrapper-content">

@@ -30,7 +30,7 @@ class ProductsController extends Controller
         $table->ajax($this->getAjaxOptions());
         $table->parameters($this->getTableParameters());
 
-        return view('admin.module.products::pages.products.index', compact('table'));
+        return view('admin.module.products::pages.index', compact('table'));
     }
 
     /**
@@ -110,7 +110,7 @@ class ProductsController extends Controller
     {
         if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
             
-            return view('admin.module.products::pages.products.form', [
+            return view('admin.module.products::pages.form', [
                 'item' => $item,
             ]);
         } else {
