@@ -10,7 +10,7 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.*",
+      "inetstudio/admin-panel": "1.4.*",
       "sabre/xml": "^2.0"
     },
     "autoload": {
