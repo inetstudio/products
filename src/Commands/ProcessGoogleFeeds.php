@@ -114,6 +114,7 @@ class ProcessGoogleFeeds extends Command
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
         $raw = curl_exec($ch);
         curl_close($ch);
 

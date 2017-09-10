@@ -8,6 +8,45 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
+/**
+ * InetStudio\Products\Models\ProductModel
+ *
+ * @property int $id
+ * @property string $feed_hash
+ * @property string $g_id
+ * @property string $title
+ * @property string|null $description
+ * @property string $price
+ * @property string $condition
+ * @property string $availability
+ * @property string $brand
+ * @property string $product_type
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductLinkModel[] $links
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereAvailability($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereBrand($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCondition($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereFeedHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereGId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereProductType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ProductModel extends Model implements HasMediaConversions
 {
     use SoftDeletes;
@@ -42,21 +81,35 @@ class ProductModel extends Model implements HasMediaConversions
         'deleted_at',
     ];
 
+    protected $revisionCreationsEnabled = true;
+
+    /**
+     * Отношение "один ко многим" с моделью ссылок.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function links()
     {
         return $this->hasMany(ProductLinkModel::class);
     }
 
+    /**
+     * Регистрируем преобразования изображений.
+     */
     public function registerMediaConversions()
     {
         $quality = (config('products.images.quality')) ? config('products.images.quality') : 75;
 
-        if (config('products.images.sizes.product')) {
-            foreach (config('products.images.sizes.product') as $name => $size) {
-                $this->addMediaConversion($name.'_thumb')
-                    ->crop('crop-center', $size['width'], $size['height'])
-                    //->quality($quality)
-                    ->performOnCollections('preview');
+        if (config('products.images.conversions')) {
+            foreach (config('products.images.conversions') as $collection => $image) {
+                foreach ($image as $crop) {
+                    foreach ($crop as $conversion) {
+                        $this->addMediaConversion($conversion['name'])
+                            ->crop('crop-center', $conversion['size']['width'], $conversion['size']['height'])
+                            ->quality($quality)
+                            ->performOnCollections($collection);
+                    }
+                }
             }
         }
     }

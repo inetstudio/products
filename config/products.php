@@ -17,17 +17,25 @@ return [
 
     'images' => [
         'quality' => 75,
-        'sizes' => [
-            'product' => [
-                'preview' => [
-                    'width' => 260,
-                    'height' => 287,
-                ],
-                'preview_admin' => [
-                    'width' => 128,
-                    'height' => 128,
+        'conversions' => [
+            'preview' => [
+                'default' => [
+                    [
+                        'name' => 'preview_default',
+                        'size' => [
+                            'width' => 260,
+                            'height' => 287,
+                        ],
+                    ],
+                    [
+                        'name' => 'preview_admin',
+                        'size' => [
+                            'width' => 128,
+                            'height' => 128,
+                        ],
+                    ],
                 ],
             ],
-        ],
+        ]
     ],
 ];
