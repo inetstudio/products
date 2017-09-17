@@ -47,12 +47,6 @@ class ProcessGoogleFeeds extends Command
                     '{}item' => function(XMLReader $reader) {
                         return \Sabre\Xml\Deserializer\keyValue($reader, 'http://base.google.com/ns/1.0');
                     },
-                    '{}links' => function(XMLReader $reader) {
-                        return \Sabre\Xml\Deserializer\repeatingElements($reader, '{}link');
-                    },
-                    '{http://base.google.com/ns/1.0}link' => function(XMLReader $reader) {
-                        return \Sabre\Xml\Deserializer\keyValue($reader, 'http://base.google.com/ns/1.0');
-                    },
                 ];
 
                 $result = $feed->parse($xml);
@@ -115,7 +109,7 @@ class ProcessGoogleFeeds extends Command
                         foreach ($product['links'] as $link) {
                             ProductLinkModel::create([
                                 'product_id' => $productObj->id,
-                                'link' => trim($link['value']['href']),
+                                'link' => trim($link['value'][1]['value']),
                             ]);
                         }
                     }
