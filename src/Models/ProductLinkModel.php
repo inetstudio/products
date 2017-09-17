@@ -68,4 +68,17 @@ class ProductLinkModel extends Model
     {
         return $this->belongsTo(ProductModel::class);
     }
+
+    public function getShopClassAttribute()
+    {
+        $url = parse_url($this->link);
+
+        if (isset($url['host'])) {
+            if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $url['host'], $regs)) {
+                return $regs['domain'];
+            }
+        }
+
+        return 'default';
+    }
 }

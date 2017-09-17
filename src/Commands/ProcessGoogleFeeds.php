@@ -41,34 +41,41 @@ class ProcessGoogleFeeds extends Command
 
                 $feed = new XMLService();
                 $feed->elementMap = [
+                    '{}channel' => function(XMLReader $reader) {
+                        return \Sabre\Xml\Deserializer\repeatingElements($reader, '{}item');
+                    },
                     '{}item' => function(XMLReader $reader) {
                         return \Sabre\Xml\Deserializer\keyValue($reader, 'http://base.google.com/ns/1.0');
                     },
-                    '{}channel' => function(XMLReader $reader) {
-                        return \Sabre\Xml\Deserializer\repeatingElements($reader, '{}item');
+                    '{}links' => function(XMLReader $reader) {
+                        return \Sabre\Xml\Deserializer\repeatingElements($reader, '{}link');
+                    },
+                    '{http://base.google.com/ns/1.0}link' => function(XMLReader $reader) {
+                        return \Sabre\Xml\Deserializer\keyValue($reader, 'http://base.google.com/ns/1.0');
                     },
                 ];
 
                 $result = $feed->parse($xml);
 
                 $products = [];
+
                 foreach ($result[0]['value'] as $product) {
-                    $products[] = $product['id'];
+                    $products[] = trim($product['id']);
 
                     $productObj = ProductModel::updateOrCreate([
                         'feed_hash' => $feedHash,
-                        'g_id' => $product['id'],
+                        'g_id' => trim($product['id']),
                     ], [
-                        'title' => (isset($product['title'])) ? $product['title'] : ((isset($product['{}title'])) ? $product['{}title'] : ''),
-                        'description' => (isset($product['description'])) ? $product['description'] : ((isset($product['{}description'])) ? $product['{}description'] : ''),
-                        'price' => (isset($product['price'])) ? $product['price'] : ((isset($product['{}price'])) ? $product['{}price'] : ''),
-                        'condition' => (isset($product['condition'])) ? $product['condition'] : ((isset($product['{}condition'])) ? $product['{}condition'] : ''),
-                        'availability' => (isset($product['availability'])) ? $product['availability'] : ((isset($product['{}availability'])) ? $product['{}availability'] : ''),
-                        'brand' => (isset($product['brand'])) ? $product['brand'] : ((isset($product['{}brand'])) ? $product['{}brand'] : ''),
-                        'product_type' => (isset($product['product_type'])) ? $product['product_type'] : ((isset($product['{}product_type'])) ? $product['{}product_type'] : ''),
+                        'title' => (isset($product['title'])) ? trim($product['title']) : ((isset($product['{}title'])) ? trim($product['{}title']) : ''),
+                        'description' => (isset($product['description'])) ? trim($product['description']) : ((isset($product['{}description'])) ? trim($product['{}description']) : ''),
+                        'price' => (isset($product['price'])) ? trim($product['price']) : ((isset($product['{}price'])) ? trim($product['{}price']) : ''),
+                        'condition' => (isset($product['condition'])) ? trim($product['condition']) : ((isset($product['{}condition'])) ? trim($product['{}condition']) : ''),
+                        'availability' => (isset($product['availability'])) ? trim($product['availability']) : ((isset($product['{}availability'])) ? trim($product['{}availability']) : ''),
+                        'brand' => (isset($product['brand'])) ? trim($product['brand']) : ((isset($product['{}brand'])) ? trim($product['{}brand']) : ''),
+                        'product_type' => (isset($product['product_type'])) ? trim($product['product_type']) : ((isset($product['{}product_type'])) ? trim($product['{}product_type']) : ''),
                     ]);
 
-                    $imageLink = (isset($product['image_link'])) ? $product['image_link'] : ((isset($product['{}image_link'])) ? $product['{}image_link'] : '');
+                    $imageLink = (isset($product['image_link'])) ? trim($product['image_link']) : ((isset($product['{}image_link'])) ? trim($product['{}image_link']) : '');
                     if ($imageLink) {
                         if (! $productObj->hasMedia('preview')) {
                             $tempFile = $tempPath.'/'.basename($imageLink);
@@ -93,13 +100,24 @@ class ProcessGoogleFeeds extends Command
                         }
                     }
 
-                    $productLink = (isset($product['link'])) ? $product['link'] : ((isset($product['{}link'])) ? $product['{}link'] : '');
-                    if ($productLink) {
-                        ProductLinkModel::updateOrCreate([
-                            'product_id' => $productObj->id,
-                        ], [
-                            'link' => $productLink,
-                        ]);
+                    if (isset($product['link']) or isset($product['{}link'])) {
+                        $productLink = (isset($product['link'])) ? $product['link'] : ((isset($product['{}link'])) ? $product['{}link'] : '');
+                        if ($productLink) {
+                            ProductLinkModel::updateOrCreate([
+                                'product_id' => $productObj->id,
+                            ], [
+                                'link' => trim($productLink),
+                            ]);
+                        }
+                    } elseif (isset($product['links'])) {
+                        ProductLinkModel::where('product_id', $productObj->id)->delete();
+
+                        foreach ($product['links'] as $link) {
+                            ProductLinkModel::create([
+                                'product_id' => $productObj->id,
+                                'link' => trim($link['value']['href']),
+                            ]);
+                        }
                     }
                 }
 

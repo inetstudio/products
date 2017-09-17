@@ -90,7 +90,7 @@ class ProductModel extends Model implements HasMediaConversions
      */
     public function links()
     {
-        return $this->hasMany(ProductLinkModel::class);
+        return $this->hasMany(ProductLinkModel::class, 'product_id', 'id');
     }
 
     /**
