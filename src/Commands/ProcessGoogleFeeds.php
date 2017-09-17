@@ -104,7 +104,7 @@ class ProcessGoogleFeeds extends Command
                             ]);
                         }
                     } elseif (isset($product['links'])) {
-                        ProductLinkModel::where('product_id', $productObj->id)->delete();
+                        ProductLinkModel::where('product_id', $productObj->id)->forceDelete();
 
                         foreach ($product['links'] as $link) {
                             ProductLinkModel::create([
