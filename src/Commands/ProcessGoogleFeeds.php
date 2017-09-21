@@ -3,8 +3,6 @@
 namespace InetStudio\Products\Commands;
 
 use Illuminate\Console\Command;
-use Sabre\Xml\Reader as XMLReader;
-use Sabre\Xml\Service as XMLService;
 use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
@@ -37,39 +35,32 @@ class ProcessGoogleFeeds extends Command
         if (config('products.feeds.google')) {
             foreach (config('products.feeds.google') as $url) {
                 $feedHash = md5($url);
-                $xml = file_get_contents($url);
 
-                $feed = new XMLService();
-                $feed->elementMap = [
-                    '{}channel' => function(XMLReader $reader) {
-                        return \Sabre\Xml\Deserializer\repeatingElements($reader, '{}item');
-                    },
-                    '{}item' => function(XMLReader $reader) {
-                        return \Sabre\Xml\Deserializer\keyValue($reader, 'http://base.google.com/ns/1.0');
-                    },
-                ];
-
-                $result = $feed->parse($xml);
+                $context = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
+                $contents = file_get_contents($url, false, $context);
+                $xml = simplexml_load_string($contents);
 
                 $products = [];
 
-                foreach ($result[0]['value'] as $product) {
-                    $products[] = trim($product['id']);
+                foreach ($xml->channel->item as $item) {
+                    $product = $item->children('g', true);
+
+                    $products[] = trim($product->id);
 
                     $productObj = ProductModel::updateOrCreate([
                         'feed_hash' => $feedHash,
-                        'g_id' => trim($product['id']),
+                        'g_id' => trim($product->id),
                     ], [
-                        'title' => (isset($product['title'])) ? trim($product['title']) : ((isset($product['{}title'])) ? trim($product['{}title']) : ''),
-                        'description' => (isset($product['description'])) ? trim($product['description']) : ((isset($product['{}description'])) ? trim($product['{}description']) : ''),
-                        'price' => (isset($product['price'])) ? trim($product['price']) : ((isset($product['{}price'])) ? trim($product['{}price']) : ''),
-                        'condition' => (isset($product['condition'])) ? trim($product['condition']) : ((isset($product['{}condition'])) ? trim($product['{}condition']) : ''),
-                        'availability' => (isset($product['availability'])) ? trim($product['availability']) : ((isset($product['{}availability'])) ? trim($product['{}availability']) : ''),
-                        'brand' => (isset($product['brand'])) ? trim($product['brand']) : ((isset($product['{}brand'])) ? trim($product['{}brand']) : ''),
-                        'product_type' => (isset($product['product_type'])) ? trim($product['product_type']) : ((isset($product['{}product_type'])) ? trim($product['{}product_type']) : ''),
+                        'title' => (isset($product->title)) ? trim($product->title) : ((isset($item->title)) ? trim($item->title) : ''),
+                        'description' => (isset($product->description)) ? trim($product->description) : ((isset($item->description)) ? trim($item->description) : ''),
+                        'price' => (isset($product->price)) ? trim($product->price) : ((isset($item->price)) ? trim($item->price) : ''),
+                        'condition' => (isset($product->condition)) ? trim($product->condition) : ((isset($item->condition)) ? trim($item->condition) : ''),
+                        'availability' => (isset($product->availability)) ? trim($product->availability) : ((isset($item->availability)) ? trim($item->availability) : ''),
+                        'brand' => (isset($product->brand)) ? trim($product->brand) : ((isset($item->brand)) ? trim($item->brand) : ''),
+                        'product_type' => (isset($product->product_type)) ? trim($product->product_type) : ((isset($item->product_type)) ? trim($item->product_type) : ''),
                     ]);
 
-                    $imageLink = (isset($product['image_link'])) ? trim($product['image_link']) : ((isset($product['{}image_link'])) ? trim($product['{}image_link']) : '');
+                    $imageLink = (isset($product->image_link)) ? trim($product->image_link) : ((isset($item->image_link)) ? trim($item->image_link) : '');
                     if ($imageLink) {
                         if (! $productObj->hasMedia('preview')) {
                             $tempFile = $tempPath.'/'.basename($imageLink);
@@ -94,8 +85,8 @@ class ProcessGoogleFeeds extends Command
                         }
                     }
 
-                    if (isset($product['link']) or isset($product['{}link'])) {
-                        $productLink = (isset($product['link'])) ? $product['link'] : ((isset($product['{}link'])) ? $product['{}link'] : '');
+                    if (isset($product->link) or isset($item->link)) {
+                        $productLink = (isset($product->link)) ? $product->link : ((isset($item->link)) ? $item->link : '');
                         if ($productLink) {
                             ProductLinkModel::updateOrCreate([
                                 'product_id' => $productObj->id,
@@ -103,13 +94,13 @@ class ProcessGoogleFeeds extends Command
                                 'link' => trim($productLink),
                             ]);
                         }
-                    } elseif (isset($product['links'])) {
+                    } elseif (isset($product->links)) {
                         ProductLinkModel::where('product_id', $productObj->id)->forceDelete();
 
-                        foreach ($product['links'] as $link) {
+                        foreach ($product->links->link as $link) {
                             ProductLinkModel::create([
                                 'product_id' => $productObj->id,
-                                'link' => trim($link['value'][1]['value']),
+                                'link' => trim($link->href),
                             ]);
                         }
                     }
@@ -120,7 +111,7 @@ class ProcessGoogleFeeds extends Command
         }
     }
 
-    private function grabImage($url, $saveto)
+    private function grabImage($url, $saveTo)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -130,11 +121,11 @@ class ProcessGoogleFeeds extends Command
         $raw = curl_exec($ch);
         curl_close($ch);
 
-        if (file_exists($saveto)) {
-            unlink($saveto);
+        if (file_exists($saveTo)) {
+            unlink($saveTo);
         }
 
-        $fp = fopen($saveto, 'x');
+        $fp = fopen($saveTo, 'x');
         fwrite($fp, $raw);
         fclose($fp);
     }
