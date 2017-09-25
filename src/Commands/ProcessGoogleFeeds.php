@@ -108,6 +108,8 @@ class ProcessGoogleFeeds extends Command
 
                 ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->forceDelete();
             }
+
+            \Event::fire('inetstudio.products.cache.clear');
         }
     }
 
