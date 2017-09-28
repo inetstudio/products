@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
+use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
@@ -52,6 +53,7 @@ class ProductModel extends Model implements HasMediaConversions
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;
+    use HasSimpleCountersTrait;
 
     /**
      * Связанная с моделью таблица.

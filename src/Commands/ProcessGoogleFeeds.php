@@ -77,7 +77,7 @@ class ProcessGoogleFeeds extends Command
                                 'source' => $imageLink,
                             ];
                             $media->save();
-                            
+
                             \Event::fire('inetstudio.images.cache.clear', 'preview_'.md5(get_class($productObj).$productObj->id));
                         } else {
                             if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
