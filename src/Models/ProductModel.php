@@ -106,10 +106,36 @@ class ProductModel extends Model implements HasMediaConversions
             foreach (config('products.images.conversions') as $collection => $image) {
                 foreach ($image as $crop) {
                     foreach ($crop as $conversion) {
-                        $this->addMediaConversion($conversion['name'])
-                            ->crop('crop-center', $conversion['size']['width'], $conversion['size']['height'])
-                            ->quality($quality)
-                            ->performOnCollections($collection);
+                        $imageConversion = $this->addMediaConversion($conversion['name']);
+
+                        if (isset($conversion['size']['width'])) {
+                            $imageConversion->width($conversion['size']['width']);
+                        }
+
+                        if (isset($conversion['size']['height'])) {
+                            $imageConversion->height($conversion['size']['height']);
+                        }
+
+                        if (isset($conversion['crop']['width']) && isset($conversion['crop']['height'])) {
+                            $imageConversion->crop('crop-center', $conversion['crop']['width'], $conversion['crop']['height']);
+                        }
+
+                        if (isset($conversion['fit']['width']) && isset($conversion['fit']['height'])) {
+                            $imageConversion->fit('fill', $conversion['fit']['width'], $conversion['fit']['height']);
+
+                            if (isset($conversion['fit']['background'])) {
+                                $imageConversion->background($conversion['fit']['background']);
+                            }
+                        }
+
+                        if (isset($conversion['quality'])) {
+                            $imageConversion->quality($conversion['quality']);
+                            $imageConversion->optimize();
+                        } else {
+                            $imageConversion->quality($quality);
+                        }
+
+                        $imageConversion->performOnCollections($collection);
                     }
                 }
             }
