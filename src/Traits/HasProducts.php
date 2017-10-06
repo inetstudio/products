@@ -60,7 +60,7 @@ trait HasProducts
      *
      * @return void
      */
-    public static function bootProductable()
+    public static function bootHasProducts()
     {
         static::created(function (Model $productableModel) {
             if ($productableModel->queuedProducts) {

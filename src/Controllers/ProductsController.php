@@ -2,10 +2,10 @@
 
 namespace InetStudio\Products\Controllers;
 
-use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
+use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Products\Transformers\ProductTransformer;
 use InetStudio\Products\Transformers\ProductEmbeddedTransformer;
 
@@ -16,6 +16,8 @@ use InetStudio\Products\Transformers\ProductEmbeddedTransformer;
  */
 class ProductsController extends Controller
 {
+    use DatatablesTrait;
+
     /**
      * Список продуктов.
      *
@@ -24,62 +26,9 @@ class ProductsController extends Controller
      */
     public function index(Datatables $dataTable)
     {
-        $table = $dataTable->getHtmlBuilder();
-
-        $table->columns($this->getColumns());
-        $table->ajax($this->getAjaxOptions());
-        $table->parameters($this->getTableParameters());
+        $table = $this->generateTable($dataTable, 'products', 'index');
 
         return view('admin.module.products::pages.index', compact('table'));
-    }
-
-    /**
-     * Свойства колонок datatables.
-     *
-     * @return array
-     */
-    private function getColumns()
-    {
-        return [
-            ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
-            ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
-            ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-            ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
-            ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-        ];
-    }
-
-    /**
-     * Свойства ajax datatables.
-     *
-     * @return array
-     */
-    private function getAjaxOptions()
-    {
-        return [
-            'url' => route('back.products.data'),
-            'type' => 'POST',
-            'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
-        ];
-    }
-
-    /**
-     * Свойства datatables.
-     *
-     * @return array
-     */
-    private function getTableParameters()
-    {
-        return [
-            'paging' => true,
-            'pagingType' => 'full_numbers',
-            'searching' => true,
-            'info' => false,
-            'searchDelay' => 350,
-            'language' => [
-                'url' => asset('admin/js/plugins/datatables/locales/russian.json'),
-            ],
-        ];
     }
 
     /**
@@ -92,7 +41,7 @@ class ProductsController extends Controller
     {
         $items = ProductModel::query();
 
-        $transformer = (!$type) ? new ProductTransformer : new ProductEmbeddedTransformer;
+        $transformer = (! $type) ? new ProductTransformer : new ProductEmbeddedTransformer;
 
         return Datatables::of($items)
             ->setTransformer($transformer)
