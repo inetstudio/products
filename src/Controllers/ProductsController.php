@@ -2,7 +2,7 @@
 
 namespace InetStudio\Products\Controllers;
 
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\AdminPanel\Traits\DatatablesTrait;
@@ -21,10 +21,10 @@ class ProductsController extends Controller
     /**
      * Список продуктов.
      *
-     * @param Datatables $dataTable
+     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Datatables $dataTable)
+    public function index(DataTables $dataTable)
     {
         $table = $this->generateTable($dataTable, 'products', 'index');
 
@@ -43,9 +43,9 @@ class ProductsController extends Controller
 
         $transformer = (! $type) ? new ProductTransformer : new ProductEmbeddedTransformer;
 
-        return Datatables::of($items)
+        return DataTables::of($items)
             ->setTransformer($transformer)
-            ->escapeColumns(['preview', 'actions'])
+            ->rawColumns(['preview', 'actions'])
             ->make();
     }
 
