@@ -28,7 +28,7 @@ class ProcessGoogleFeeds extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $tempPath = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix();
 

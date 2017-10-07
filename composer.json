@@ -10,12 +10,18 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.4.*",
-      "sabre/xml": "^2.0"
+      "inetstudio/admin-panel": "1.5.*"
     },
     "autoload": {
       "psr-4": {
         "InetStudio\\Products\\": "src/"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "InetStudio\\Products\\ProductsServiceProvider"
+        ]
       }
     }
 }

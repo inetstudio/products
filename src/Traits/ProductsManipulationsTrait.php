@@ -12,7 +12,7 @@ trait ProductsManipulationsTrait
      */
     private function saveProducts($item, $request)
     {
-        if ($request->has('products')) {
+        if ($request->filled('products')) {
             $ids = [];
 
             foreach ($request->get('products') as $product) {
