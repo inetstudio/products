@@ -36,7 +36,7 @@ class ProcessGoogleFeeds extends Command
             foreach (config('products.feeds.google') as $url) {
                 $feedHash = md5($url);
 
-                $context = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
+                $context = stream_context_create(['http' => ['header' => 'Accept: application/xml']]);
                 $contents = file_get_contents($url, false, $context);
                 $xml = simplexml_load_string($contents);
 
@@ -121,7 +121,7 @@ class ProcessGoogleFeeds extends Command
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $raw = curl_exec($ch);
         curl_close($ch);
 

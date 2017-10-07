@@ -5,10 +5,9 @@ namespace InetStudio\Products\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Модель "ссылки" продукт-материал
+ * Модель "ссылки" продукт-материал.
  *
  * Class Productable
- * @package App\Models
  */
 class ProductableModel extends Model
 {
@@ -41,7 +40,7 @@ class ProductableModel extends Model
     ];
 
     /**
-     * Обратное отношение "один ко многим" с моделью продукта
+     * Обратное отношение "один ко многим" с моделью продукта.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -51,7 +50,7 @@ class ProductableModel extends Model
     }
 
     /**
-     * Получаем модель, определенную в поле productable_type с id = productable_id
+     * Получаем модель, определенную в поле productable_type с id = productable_id.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
@@ -61,7 +60,7 @@ class ProductableModel extends Model
     }
 
     /**
-     * Полиморфное отношение с остальными моделями
+     * Полиморфное отношение с остальными моделями.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */

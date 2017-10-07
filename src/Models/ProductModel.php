@@ -11,7 +11,7 @@ use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
- * InetStudio\Products\Models\ProductModel
+ * InetStudio\Products\Models\ProductModel.
  *
  * @property int $id
  * @property string $feed_hash
