@@ -58,7 +58,6 @@ class ProductsController extends Controller
     public function edit($id = null)
     {
         if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
-            
             return view('admin.module.products::pages.form', [
                 'item' => $item,
             ]);

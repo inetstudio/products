@@ -2,7 +2,6 @@
 
 namespace InetStudio\Products;
 
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class ProductsServiceProvider extends ServiceProvider
@@ -49,6 +48,5 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }
