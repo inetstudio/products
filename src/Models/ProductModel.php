@@ -2,6 +2,7 @@
 
 namespace InetStudio\Products\Models;
 
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,6 +52,7 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
  */
 class ProductModel extends Model implements HasMediaConversions
 {
+    use Searchable;
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;
@@ -94,6 +96,18 @@ class ProductModel extends Model implements HasMediaConversions
     public function links()
     {
         return $this->hasMany(ProductLinkModel::class, 'product_id', 'id');
+    }
+
+    /**
+     * Настройка полей для поиска.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'price', 'condition', 'availability', 'brand', 'product_type']);
+
+        return $arr;
     }
 
     /**
