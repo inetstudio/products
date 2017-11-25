@@ -5,9 +5,9 @@ namespace InetStudio\Products\Controllers;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
-use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Products\Transformers\ProductTransformer;
 use InetStudio\Products\Transformers\ProductEmbeddedTransformer;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
  * Контроллер для управления статьями.
