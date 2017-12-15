@@ -15,13 +15,13 @@ class ProductTransformer extends TransformerAbstract
     {
         return [
             'id' => (int) $product->id,
-            'preview' => view('admin.module.products::partials.datatables.preview', [
+            'preview' => view('admin.module.products::back.partials.datatables.preview', [
                 'src' => url($product->getFirstMediaUrl('preview', 'preview_admin')),
             ])->render(),
             'title' => $product->title,
             'created_at' => (string) $product->created_at,
             'updated_at' => (string) $product->updated_at,
-            'actions' => view('admin.module.products::partials.datatables.actions', [
+            'actions' => view('admin.module.products::back.partials.datatables.actions', [
                 'id' => $product->id,
             ])->render(),
         ];

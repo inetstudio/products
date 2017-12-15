@@ -15,13 +15,13 @@ class ProductEmbeddedTransformer extends TransformerAbstract
     {
         return [
             'id' => (int) $product->id,
-            'preview' => view('admin.module.products::partials.datatables.preview', [
+            'preview' => view('admin.module.products::back.partials.datatables.preview', [
                 'src' => url($product->getFirstMediaUrl('preview', 'preview_admin')),
             ])->render(),
             'brand' => $product->brand,
             'title' => $product->title,
             'description' => $product->description,
-            'actions' => view('admin.module.products::partials.datatables.actions_embedded', [
+            'actions' => view('admin.module.products::back.partials.datatables.actions_embedded', [
                 'id' => $product->id,
             ])->render(),
         ];

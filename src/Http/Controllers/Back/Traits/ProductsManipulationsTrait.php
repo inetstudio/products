@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Products\Traits;
+namespace InetStudio\Products\Http\Controllers\Back\Traits;
 
 trait ProductsManipulationsTrait
 {

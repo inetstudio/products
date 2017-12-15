@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Products\Controllers;
+namespace InetStudio\Products\Http\Controllers\Back;
 
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -28,7 +28,7 @@ class ProductsController extends Controller
     {
         $table = $this->generateTable($dataTable, 'products', 'index');
 
-        return view('admin.module.products::pages.index', compact('table'));
+        return view('admin.module.products::back.pages.index', compact('table'));
     }
 
     /**
@@ -58,7 +58,7 @@ class ProductsController extends Controller
     public function edit($id = null)
     {
         if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
-            return view('admin.module.products::pages.form', [
+            return view('admin.module.products::back.pages.form', [
                 'item' => $item,
             ]);
         } else {
