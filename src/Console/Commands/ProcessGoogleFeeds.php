@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
+use InetStudio\Products\Events\UpdateProductsEvent;
+use InetStudio\AdminPanel\Events\Images\UpdateImageEvent;
 
 class ProcessGoogleFeeds extends Command
 {
@@ -78,7 +80,7 @@ class ProcessGoogleFeeds extends Command
                             ];
                             $media->save();
 
-                            \Event::fire('inetstudio.images.cache.clear', 'preview_'.md5(get_class($productObj).$productObj->id));
+                            event(new UpdateImageEvent($productObj, 'preview'));
                         } else {
                             if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                 $productObj->clearMediaCollection('preview');
@@ -111,7 +113,7 @@ class ProcessGoogleFeeds extends Command
                 ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->forceDelete();
             }
 
-            \Event::fire('inetstudio.products.cache.clear');
+            event(new UpdateProductsEvent());
         }
     }
 
