@@ -97,7 +97,7 @@ class ProductsServiceProvider extends ServiceProvider
      */
     protected function registerViews(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'products');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.products');
     }
 
     /**
