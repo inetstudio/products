@@ -11,6 +11,16 @@
     $items = json_encode($items);
 @endphp
 
+@pushonce('styles:datatables')
+    <!-- DATATABLES -->
+    <link href="{!! asset('admin/css/plugins/datatables/datatables.min.css') !!}" rel="stylesheet">
+@endpushonce
+
+@pushonce('styles:products_custom')
+    <!-- CUSTOM STYLE -->
+    <link href="{!! asset('admin/css/modules/products/custom.css') !!}" rel="stylesheet">
+@endpushonce
+
 <div class="row products_wrapper">
     <div class="col-lg-12">
         <div class="panel-group float-e-margins" id="productsAccordion">
@@ -43,3 +53,17 @@
         </div>
     </div>
 </div>
+
+@pushonce('scripts:datatables')
+    <!-- DATATABLES -->
+    <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
+@endpushonce
+
+@pushonce('scripts:datatable_products_embedded')
+    {!! $productsTable->scripts() !!}
+@endpushonce
+
+@pushonce('scripts:products_custom')
+    <!-- CUSTOM SCRIPT -->
+    <script src="{!! asset('admin/js/modules/products/custom.js') !!}"></script>
+@endpushonce
