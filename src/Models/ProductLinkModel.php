@@ -69,6 +69,11 @@ class ProductLinkModel extends Model
         return $this->belongsTo(ProductModel::class);
     }
 
+    /**
+     * Получаем домен ссылки.
+     *
+     * @return string
+     */
     public function getShopClassAttribute()
     {
         $url = parse_url($this->link);

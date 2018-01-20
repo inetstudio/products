@@ -10,6 +10,10 @@ use InetStudio\Products\Console\Commands\ProcessGoogleFeeds;
 use InetStudio\Products\Listeners\ClearProductsCacheListener;
 use InetStudio\Products\Console\Commands\CreateFoldersCommand;
 
+/**
+ * Class ProductsServiceProvider
+ * @package InetStudio\Products\Providers
+ */
 class ProductsServiceProvider extends ServiceProvider
 {
     /**

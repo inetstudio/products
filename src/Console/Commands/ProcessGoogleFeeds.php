@@ -9,28 +9,32 @@ use InetStudio\Products\Models\ProductLinkModel;
 use InetStudio\Products\Events\UpdateProductsEvent;
 use InetStudio\AdminPanel\Events\Images\UpdateImageEvent;
 
+/**
+ * Class ProcessGoogleFeeds
+ * @package InetStudio\Products\Console\Commands
+ */
 class ProcessGoogleFeeds extends Command
 {
     /**
-     * The console command name.
+     * Имя команды.
      *
      * @var string
      */
     protected $name = 'inetstudio:products:feeds:google';
 
     /**
-     * The console command description.
+     * Описание команды.
      *
      * @var string
      */
     protected $description = 'Process google feeds';
 
     /**
-     * Execute the console command.
+     * Запуск команды.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $tempPath = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix();
 
@@ -125,7 +129,13 @@ class ProcessGoogleFeeds extends Command
         }
     }
 
-    private function grabImage($url, $saveTo)
+    /**
+     * Сохраняем изображение.
+     *
+     * @param $url
+     * @param $saveTo
+     */
+    private function grabImage($url, $saveTo): void
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);

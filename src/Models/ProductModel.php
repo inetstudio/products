@@ -7,6 +7,7 @@ use Spatie\MediaLibrary\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\Image\Exceptions\InvalidManipulation;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
@@ -114,6 +115,8 @@ class ProductModel extends Model implements HasMediaConversions
      * Регистрируем преобразования изображений.
      *
      * @param Media|null $media
+     *
+     * @throws InvalidManipulation
      */
     public function registerMediaConversions(Media $media = null)
     {

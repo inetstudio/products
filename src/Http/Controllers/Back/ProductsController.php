@@ -2,17 +2,19 @@
 
 namespace InetStudio\Products\Http\Controllers\Back;
 
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
+use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Transformers\ProductTransformer;
 use InetStudio\Products\Transformers\ProductEmbeddedTransformer;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
- * Контроллер для управления статьями.
- *
- * Class ContestByTagStatusesController
+ * Class ProductsController
+ * @package InetStudio\Products\Http\Controllers\Back
  */
 class ProductsController extends Controller
 {
@@ -22,9 +24,12 @@ class ProductsController extends Controller
      * Список продуктов.
      *
      * @param DataTables $dataTable
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @throws \Exception
      */
-    public function index(DataTables $dataTable)
+    public function index(DataTables $dataTable): View
     {
         $table = $this->generateTable($dataTable, 'products', 'index');
 
@@ -32,10 +37,13 @@ class ProductsController extends Controller
     }
 
     /**
-     * Datatables serverside.
+     * DataTables ServerSide.
      *
      * @param $type
+     *
      * @return mixed
+     *
+     * @throws \Exception
      */
     public function data($type = '')
     {
@@ -50,12 +58,13 @@ class ProductsController extends Controller
     }
 
     /**
-     * Редактирование статьи.
+     * Редактирование продукта.
      *
      * @param null $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id = null)
+    public function edit($id = null): View
     {
         if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
             return view('admin.module.products::back.pages.form', [
@@ -67,12 +76,13 @@ class ProductsController extends Controller
     }
 
     /**
-     * Удаление статьи.
+     * Удаление продукта.
      *
      * @param null $id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id = null)
+    public function destroy($id = null): JsonResponse
     {
         if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
             $item->delete();
@@ -85,5 +95,19 @@ class ProductsController extends Controller
                 'success' => false,
             ]);
         }
+    }
+
+    /**
+     * Отображаем страницу аналитики.
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function getAnalytics(): View
+    {
+        $productables = ProductableModel::with(['product' => function ($productQuery) {
+            $productQuery->select(['id', 'brand']);
+        }])->select(['product_model_id'])->get();
+
+        return view('admin.module.products::back.pages.analytics');
     }
 }

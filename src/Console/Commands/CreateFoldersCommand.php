@@ -4,28 +4,32 @@ namespace InetStudio\Products\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class CreateFoldersCommand
+ * @package InetStudio\Products\Console\Commands
+ */
 class CreateFoldersCommand extends Command
 {
     /**
-     * The console command name.
+     * Имя команды.
      *
      * @var string
      */
     protected $name = 'inetstudio:products:folders';
 
     /**
-     * The console command description.
+     * Описание команды.
      *
      * @var string
      */
     protected $description = 'Create package folders';
 
     /**
-     * Execute the console command.
+     * Запуск команды.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         if (config('filesystems.disks.products')) {
             $path = config('filesystems.disks.products.root');

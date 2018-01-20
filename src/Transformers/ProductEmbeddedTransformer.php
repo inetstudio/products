@@ -1,15 +1,24 @@
 <?php
 
-namespace Inetstudio\Products\Transformers;
+namespace InetStudio\Products\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use InetStudio\Products\Models\ProductModel;
 
+/**
+ * Class ProductEmbeddedTransformer
+ * @package InetStudio\Products\Transformers
+ */
 class ProductEmbeddedTransformer extends TransformerAbstract
 {
     /**
+     * Подготовка данных для отображения в таблице.
+     *
      * @param ProductModel $product
+     *
      * @return array
+     *
+     * @throws \Throwable
      */
     public function transform(ProductModel $product)
     {

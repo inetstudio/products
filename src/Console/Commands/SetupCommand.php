@@ -4,35 +4,39 @@ namespace InetStudio\Products\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetupCommand
+ * @package InetStudio\Products\Console\Commands
+ */
 class SetupCommand extends Command
 {
     /**
-     * The console command name.
+     * Имя команды.
      *
      * @var string
      */
     protected $name = 'inetstudio:products:setup';
 
     /**
-     * The console command description.
+     * Описание команды.
      *
      * @var string
      */
     protected $description = 'Setup products package';
 
     /**
-     * Commands to call with their description.
+     * Список дополнительных команд.
      *
      * @var array
      */
     protected $calls = [];
 
     /**
-     * Execute the console command.
+     * Запуск команды.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->initCommands();
 
@@ -51,7 +55,7 @@ class SetupCommand extends Command
      *
      * @return void
      */
-    private function initCommands()
+    private function initCommands(): void
     {
         $this->calls = [
             [

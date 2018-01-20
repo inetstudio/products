@@ -2,6 +2,10 @@
 
 namespace InetStudio\Products\Http\Controllers\Back\Traits;
 
+/**
+ * Trait ProductsManipulationsTrait
+ * @package InetStudio\Products\Http\Controllers\Back\Traits
+ */
 trait ProductsManipulationsTrait
 {
     /**
@@ -10,7 +14,7 @@ trait ProductsManipulationsTrait
      * @param $item
      * @param $request
      */
-    private function saveProducts($item, $request)
+    private function saveProducts($item, $request): void
     {
         if ($request->filled('products')) {
             $ids = [];
