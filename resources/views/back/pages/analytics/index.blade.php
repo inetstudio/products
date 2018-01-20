@@ -9,7 +9,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.products::back.partials.breadcrumbs.analytics')
+        @include('admin.module.products::back.partials.breadcrumbs.analytics.index')
     @endpush
 
     <div class="wrapper wrapper-content">

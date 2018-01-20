@@ -8,8 +8,6 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductableModel;
-use InetStudio\Products\Transformers\ProductTransformer;
-use InetStudio\Products\Transformers\ProductEmbeddedTransformer;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
@@ -34,27 +32,6 @@ class ProductsController extends Controller
         $table = $this->generateTable($dataTable, 'products', 'index');
 
         return view('admin.module.products::back.pages.index', compact('table'));
-    }
-
-    /**
-     * DataTables ServerSide.
-     *
-     * @param $type
-     *
-     * @return mixed
-     *
-     * @throws \Exception
-     */
-    public function data($type = '')
-    {
-        $items = ProductModel::query();
-
-        $transformer = (! $type) ? new ProductTransformer : new ProductEmbeddedTransformer;
-
-        return DataTables::of($items)
-            ->setTransformer($transformer)
-            ->rawColumns(['preview', 'actions'])
-            ->make();
     }
 
     /**
@@ -108,6 +85,29 @@ class ProductsController extends Controller
             $productQuery->select(['id', 'brand']);
         }])->select(['product_model_id'])->get();
 
-        return view('admin.module.products::back.pages.analytics');
+        $data = $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
+            return [$key => $item->count()];
+        });
+
+        return view('admin.module.products::back.pages.analytics.index', [
+            'brands' => $data
+        ]);
+    }
+
+    /**
+     * Отображаем страницу продуктов бренда.
+     *
+     * @param DataTables $dataTable
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     *
+     * @throws \Exception
+     */
+    public function getBrandAnalytics(DataTables $dataTable)
+    {
+        $table = $this->generateTable($dataTable, 'products', 'brand');
+        $tableUnlinked = $this->generateTable($dataTable, 'products', 'brand_unlinked');
+
+        return view('admin.module.products::back.pages.analytics.brand', compact('table', 'tableUnlinked'));
     }
 }

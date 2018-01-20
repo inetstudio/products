@@ -21,6 +21,16 @@ return [
                 'type' => 'POST',
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
+            'brand' => [
+                'url' => 'back.products.data.analytics.brand',
+                'type' => 'POST',
+                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+            ],
+            'brand_unlinked' => [
+                'url' => 'back.products.data.analytics.brand.inlinked',
+                'type' => 'POST',
+                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+            ],
         ],
         'table' => [
             'default' => [
@@ -48,6 +58,20 @@ return [
                 ['data' => 'brand', 'name' => 'brand', 'title' => 'Бренд'],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
                 ['data' => 'description', 'name' => 'description', 'title' => 'Описание'],
+                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
+            ],
+            'brand' => [
+                ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
+                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
+                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
+                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
+            ],
+            'brand_unlinked' => [
+                ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
+                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
+                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
                 ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
             ],
         ],

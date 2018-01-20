@@ -14,7 +14,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.products::back.partials.breadcrumbs.index')
+        @include('admin.module.products::back.partials.breadcrumbs.analytics.brand')
     @endpush
 
     <div class="wrapper wrapper-content">
@@ -24,6 +24,10 @@
                     <div class="ibox-content">
                         <div class="table-responsive">
                             {{ $table->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
+                        </div>
+                        <h2>Непривязанные товары</h2>
+                        <div class="table-responsive">
+                            {{ $tableUnlinked->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
                         </div>
                     </div>
                 </div>
@@ -37,6 +41,7 @@
     <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
 @endpushonce
 
-@pushonce('scripts:datatables_products_index')
+@pushonce('scripts:datatables_products')
     {!! $table->scripts() !!}
+    {!! $tableUnlinked->scripts() !!}
 @endpushonce
