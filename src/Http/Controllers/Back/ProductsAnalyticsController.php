@@ -5,7 +5,6 @@ namespace InetStudio\Products\Http\Controllers\Back;
 use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
-use InetStudio\Products\Models\ProductableModel;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
@@ -19,21 +18,16 @@ class ProductsAnalyticsController extends Controller
     /**
      * Отображаем страницу аналитики.
      *
-     * @return \Illuminate\Contracts\View\Factory|View
+     * @return View
+     *
+     * @throws \Exception
      */
-    public function getAnalytics(): View
+    public function getBrandsAnalytics(): View
     {
-        $productables = ProductableModel::with(['product' => function ($productQuery) {
-            $productQuery->select(['id', 'brand']);
-        }])->select(['product_model_id'])->get();
+        $table = $this->generateTable('products', 'brands')
+            ->postAjax(route('back.products.data.analytics.brands'));
 
-        $data = $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
-            return [$key => $item->count()];
-        });
-
-        return view('admin.module.products::back.pages.analytics.index', [
-            'brands' => $data
-        ]);
+        return view('admin.module.products::back.pages.analytics.index', compact('table'));
     }
 
     /**

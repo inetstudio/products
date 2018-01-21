@@ -21,6 +21,9 @@ return [
                 'type' => 'POST',
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
+            'brands' => [
+                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+            ],
             'brand' => [
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
@@ -33,7 +36,7 @@ return [
                 'paging' => true,
                 'pagingType' => 'full_numbers',
                 'searching' => true,
-                'info' => false,
+                'info' => true,
                 'searchDelay' => 350,
                 'language' => [
                     'url' => '/admin/js/plugins/datatables/locales/russian.json',
@@ -55,6 +58,11 @@ return [
                 ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
                 ['data' => 'description', 'name' => 'description', 'title' => 'Описание'],
                 ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
+            ],
+            'brands' => [
+                ['data' => 'brand', 'name' => 'brand', 'title' => 'Бренд'],
+                ['data' => 'percents', 'name' => 'percents', 'title' => '%'],
+                ['data' => 'references', 'name' => 'references', 'title' => 'Количество упоминаний'],
             ],
             'brand' => [
                 ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],

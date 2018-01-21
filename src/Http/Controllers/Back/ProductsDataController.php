@@ -6,6 +6,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductableModel;
+use InetStudio\Products\Transformers\Back\BrandTransformer;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
@@ -38,6 +39,30 @@ class ProductsDataController extends Controller
     }
 
     /**
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function dataBrands()
+    {
+        $productables = ProductableModel::with(['product' => function ($productQuery) {
+            $productQuery->select(['id', 'brand']);
+        }])->select(['product_model_id'])->get();
+
+        $items = $productables->groupBy('product.brand')->map(function ($item, $key) {
+            return [
+                'brand' => $key,
+                'references' => $item->count(),
+            ];
+        });
+
+        return DataTables::of($items)
+            ->setTransformer(new BrandTransformer($items->sum('references')))
+            ->rawColumns(['brand'])
+            ->make();
+    }
+
+    /**
      * @param string $brand
      *
      * @return mixed
@@ -47,11 +72,11 @@ class ProductsDataController extends Controller
     public function dataBrand(string $brand)
     {
         $items = ProductableModel::with(['product' => function ($productQuery) {
-                $productQuery->with(['media' => function ($query) {
-                        $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-                    }])
-                    ->select(['id', 'brand', 'title']);
-            }, 'productable'])
+            $productQuery->with(['media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            }])
+                ->select(['id', 'brand', 'title']);
+        }, 'productable'])
             ->whereHas('product', function ($productQuery) use ($brand) {
                 $productQuery->where('brand', $brand);
             })->get()->filter(function ($value) {
@@ -74,8 +99,8 @@ class ProductsDataController extends Controller
     public function dataBrandUnlinked(string $brand)
     {
         $items = ProductModel::with(['media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-            }])
+            $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+        }])
             ->select(['id', 'brand', 'title', 'created_at', 'updated_at'])
             ->where('brand', $brand)
             ->doesntHave('productables')

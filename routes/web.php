@@ -9,10 +9,11 @@ Route::group([
         'index', 'edit', 'destroy',
     ], 'as' => 'back']);
 
-    Route::get('products/analytics', 'ProductsAnalyticsController@getAnalytics')->name('back.products.analytics');
+    Route::get('products/analytics', 'ProductsAnalyticsController@getBrandsAnalytics')->name('back.products.analytics');
     Route::get('products/analytics/{brand}', 'ProductsAnalyticsController@getBrandAnalytics')->name('back.products.analytics.brand');
 
     Route::any('products/data/{type?}', 'ProductsDataController@data')->name('back.products.data');
+    Route::any('products/data/analytics/brands', 'ProductsDataController@dataBrands')->name('back.products.data.analytics.brands');
     Route::any('products/data/analytics/brand/{brand}', 'ProductsDataController@dataBrand')->name('back.products.data.analytics.brand');
     Route::any('products/data/analytics/brand/unlinked/{brand}', 'ProductsDataController@dataBrandUnlinked')->name('back.products.data.analytics.brand.unlinked');
 });
