@@ -22,13 +22,9 @@ return [
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
             'brand' => [
-                'url' => 'back.products.data.analytics.brand',
-                'type' => 'POST',
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
             'brand_unlinked' => [
-                'url' => 'back.products.data.analytics.brand.unlinked',
-                'type' => 'POST',
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
         ],
@@ -63,8 +59,8 @@ return [
             'brand' => [
                 ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
-                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
+                ['data' => 'material_type', 'name' => 'material_type', 'title' => 'Тип материала'],
+                ['data' => 'material_title', 'name' => 'material_title', 'title' => 'Название материала'],
                 ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
             ],
             'brand_unlinked' => [

@@ -5,6 +5,7 @@ namespace InetStudio\Products\Http\Controllers\Back;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
+use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
 
@@ -36,28 +37,32 @@ class ProductsDataController extends Controller
     }
 
     /**
+     * @param string $brand
+     *
      * @return mixed
      *
      * @throws \Exception
      */
-    public function dataBrand()
+    public function dataBrand(string $brand)
     {
         $items = ProductModel::query();
 
         return DataTables::of($items)
             ->setTransformer(new ProductTransformer)
-            ->rawColumns(['preview', 'actions'])
+            ->rawColumns(['preview', 'material_title', 'actions'])
             ->make();
     }
 
     /**
+     * @param string $brand
+     *
      * @return mixed
      *
      * @throws \Exception
      */
-    public function dataBrandUnlinked()
+    public function dataBrandUnlinked(string $brand)
     {
-        $items = ProductModel::query();
+        $items = ProductModel::where('brand', $brand)->get();
 
         return DataTables::of($items)
             ->setTransformer(new ProductTransformer)
