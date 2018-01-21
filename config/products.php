@@ -27,7 +27,7 @@ return [
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],
             'brand_unlinked' => [
-                'url' => 'back.products.data.analytics.brand.inlinked',
+                'url' => 'back.products.data.analytics.brand.unlinked',
                 'type' => 'POST',
                 'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
             ],

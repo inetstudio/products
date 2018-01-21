@@ -21,15 +21,13 @@ class ProductsController extends Controller
     /**
      * Список продуктов.
      *
-     * @param DataTables $dataTable
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * @throws \Exception
      */
-    public function index(DataTables $dataTable): View
+    public function index(): View
     {
-        $table = $this->generateTable($dataTable, 'products', 'index');
+        $table = $this->generateTable('products', 'index');
 
         return view('admin.module.products::back.pages.index', compact('table'));
     }
@@ -97,16 +95,14 @@ class ProductsController extends Controller
     /**
      * Отображаем страницу продуктов бренда.
      *
-     * @param DataTables $dataTable
-     *
      * @return \Illuminate\Contracts\View\Factory|View
      *
      * @throws \Exception
      */
-    public function getBrandAnalytics(DataTables $dataTable)
+    public function getBrandAnalytics()
     {
-        $table = $this->generateTable($dataTable, 'products', 'brand');
-        $tableUnlinked = $this->generateTable($dataTable, 'products', 'brand_unlinked');
+        $table = $this->generateTable('products', 'brand')->setTableId('products_materials');
+        $tableUnlinked = $this->generateTable('products', 'brand_unlinked')->setTableId('unlinked_products');
 
         return view('admin.module.products::back.pages.analytics.brand', compact('table', 'tableUnlinked'));
     }
