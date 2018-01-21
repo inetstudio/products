@@ -48,13 +48,15 @@ class ProductsDataController extends Controller
     {
         $items = ProductableModel::with(['product' => function ($productQuery) {
                 $productQuery->with(['media' => function ($query) {
-                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-                }])
+                        $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                    }])
                     ->select(['id', 'brand', 'title']);
             }, 'productable'])
             ->whereHas('product', function ($productQuery) use ($brand) {
                 $productQuery->where('brand', $brand);
-            })->get();
+            })->get()->filter(function ($value) {
+                return $value->productable;
+            });
 
         return DataTables::of($items)
             ->setTransformer(new ProductableTransformer)

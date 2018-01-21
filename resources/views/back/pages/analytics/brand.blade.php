@@ -1,7 +1,7 @@
 @extends('admin::back.layouts.app')
 
 @php
-    $title = 'Продукты';
+    $title = \Request::route('brand');
 @endphp
 
 @section('title', $title)
@@ -22,12 +22,25 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
-                        <div class="table-responsive">
-                            {{ $table->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Привязанные товары <span class="label label-primary pull-right">{{ $linkedCount }}</span></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    {{ $table->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
+                                </div>
+                            </div>
                         </div>
-                        <h2>Непривязанные товары</h2>
-                        <div class="table-responsive">
-                            {{ $tableUnlinked->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Непривязанные товары <span class="label label-warning pull-right">{{ $unlinkedCount }}</span></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    {{ $tableUnlinked->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
