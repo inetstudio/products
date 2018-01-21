@@ -4,6 +4,23 @@ namespace InetStudio\Products\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * InetStudio\Products\Models\ProductableModel
+ *
+ * @property \Carbon\Carbon|null $created_at
+ * @property int $product_model_id
+ * @property int $productable_id
+ * @property string $productable_type
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \InetStudio\Products\Models\ProductModel $product
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $productable
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductableModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductableModel whereProductModelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductableModel whereProductableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductableModel whereProductableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductableModel whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class ProductableModel extends Model
 {
     /**

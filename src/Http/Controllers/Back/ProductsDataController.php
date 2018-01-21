@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
+use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
 
 /**
@@ -45,10 +46,18 @@ class ProductsDataController extends Controller
      */
     public function dataBrand(string $brand)
     {
-        $items = ProductModel::query();
+        $items = ProductableModel::with(['product' => function ($productQuery) {
+                $productQuery->with(['media' => function ($query) {
+                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                }])
+                    ->select(['id', 'brand', 'title']);
+            }, 'productable'])
+            ->whereHas('product', function ($productQuery) use ($brand) {
+                $productQuery->where('brand', $brand);
+            })->get();
 
         return DataTables::of($items)
-            ->setTransformer(new ProductTransformer)
+            ->setTransformer(new ProductableTransformer)
             ->rawColumns(['preview', 'material_title', 'actions'])
             ->make();
     }
@@ -62,7 +71,13 @@ class ProductsDataController extends Controller
      */
     public function dataBrandUnlinked(string $brand)
     {
-        $items = ProductModel::where('brand', $brand)->get();
+        $items = ProductModel::with(['media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            }])
+            ->select(['id', 'brand', 'title', 'created_at', 'updated_at'])
+            ->where('brand', $brand)
+            ->doesntHave('productables')
+            ->get();
 
         return DataTables::of($items)
             ->setTransformer(new ProductTransformer)
