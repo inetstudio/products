@@ -12,45 +12,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
-/**
- * InetStudio\Products\Models\ProductModel.
- *
- * @property int $id
- * @property string $feed_hash
- * @property string $g_id
- * @property string $title
- * @property string|null $description
- * @property string $price
- * @property string $condition
- * @property string $availability
- * @property string $brand
- * @property string $product_type
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property \Carbon\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductLinkModel[] $links
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
- * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel onlyTrashed()
- * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereAvailability($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereBrand($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCondition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereFeedHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereGId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereProductType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withoutTrashed()
- * @mixin \Eloquent
- */
 class ProductModel extends Model implements HasMediaConversions
 {
     use Searchable;
@@ -97,6 +58,16 @@ class ProductModel extends Model implements HasMediaConversions
     public function links()
     {
         return $this->hasMany(ProductLinkModel::class, 'product_id', 'id');
+    }
+
+    /**
+     * Отношение "один ко многим" с моделью "ссылок" на материалы.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productables()
+    {
+        return $this->hasMany(ProductableModel::class, 'product_model_id');
     }
 
     /**

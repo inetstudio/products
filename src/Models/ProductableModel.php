@@ -4,11 +4,6 @@ namespace InetStudio\Products\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Модель "ссылки" продукт-материал.
- *
- * Class Productable
- */
 class ProductableModel extends Model
 {
     /**
@@ -47,16 +42,6 @@ class ProductableModel extends Model
     public function product()
     {
         return $this->belongsTo(ProductModel::class, 'product_model_id');
-    }
-
-    /**
-     * Получаем модель, определенную в поле productable_type с id = productable_id.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function item()
-    {
-        return $this->productable();
     }
 
     /**
