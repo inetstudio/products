@@ -3,6 +3,7 @@
 namespace InetStudio\Products\Http\Controllers\Back;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Spatie\Analytics\Period;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -51,56 +52,61 @@ class ProductsDataController extends Controller
             $productQuery->select(['id', 'brand']);
         }])->select(['product_model_id'])->get();
 
-        $items = $productables->groupBy('product.brand')->map(function ($item, $key) {
-            return [
+        $items = $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
+            return [mb_strtoupper($key) => [
                 'brand' => $key,
                 'references' => $item->count(),
-            ];
+            ]];
         });
 
         $productsClicks = $this->getProductsClicks();
         $productsViews = $this->getProductsViews();
 
-        $views = [];
-        $clicks = [];
+        $productsClicks = $productsClicks->map(function ($item, $key) {
+            return [
+                'brand' => mb_strtoupper(Str::before($item[1], ':')),
+                'product' => trim(Str::after($item[1], ':')),
+                'shop' => $item[2],
+                'count' => $item[3],
+            ];
+        })->groupBy('brand')->map(function ($item, $key) {
+            $total = $item->sum('count');
+            return [
+                'shops' => $item->groupBy('shop'),
+                'total' => $total,
+            ];
+        });
 
-        foreach ($productsViews as $eventView) {
-            $brand = strtok($eventView[1], ':');
-            $shop = $eventView[2];
+        $productsViews = $productsViews->map(function ($item, $key) {
+            return [
+                'brand' => mb_strtoupper(Str::before($item[1], ':')),
+                'product' => trim(Str::after($item[1], ':')),
+                'shop' => $item[2],
+                'count' => $item[3],
+            ];
+        })->groupBy('brand')->map(function ($item, $key) {
+            $total = $item->sum('count');
+            return [
+                'shops' => $item->groupBy('shop'),
+                'total' => $total,
+            ];
+        });
 
-            if (! isset($views[$brand][$shop])) {
-                $views[$brand][$shop] = 0;
+        $items = $items->mapWithKeys(function ($item, $key) use ($productsViews, $productsClicks) {
+            if ($productsViews->has($key)) {
+                $item['views'] = $productsViews->get($key);
             }
 
-            $views[$brand][$shop] += $eventView[3];
-        }
-
-        foreach ($productsClicks as $eventClick) {
-            $brand = strtok($eventClick[1], ':');
-            $shop = $eventClick[2];
-
-            if (! isset($clicks[$brand][$shop])) {
-                $clicks[$brand][$shop] = 0;
+            if ($productsClicks->has($key)) {
+                $item['clicks'] = $productsClicks->get($key);
             }
 
-            $clicks[$brand][$shop] += $eventClick[3];
-        }
-
-        foreach ($views as $brand => $data) {
-            if (isset($items[$brand])) {
-                $items[$brand]['views'] = $data;
-            }
-        }
-
-        foreach ($clicks as $brand => $data) {
-            if (isset($items[$brand])) {
-                $items[$brand]['clicks'] = $data;
-            }
-        }
+            return [$key => $item];
+        });
 
         return DataTables::of($items)
             ->setTransformer(new BrandTransformer($items->sum('references')))
-            ->rawColumns(['brand'])
+            ->rawColumns(['brand', 'shops'])
             ->make();
     }
 
@@ -172,7 +178,7 @@ class ProductsDataController extends Controller
         return $rows;
     }
 
-    private function getProductsView()
+    private function getProductsViews()
     {
         $start = config('products.analytics_start_period');
 

@@ -63,8 +63,12 @@ return [
             ],
             'brands' => [
                 ['data' => 'brand', 'name' => 'brand', 'title' => 'Бренд'],
-                ['data' => 'percents', 'name' => 'percents', 'title' => '%'],
                 ['data' => 'references', 'name' => 'references', 'title' => 'Количество упоминаний'],
+                ['data' => 'percents', 'name' => 'percents', 'title' => '%'],
+                ['data' => 'views', 'name' => 'views', 'title' => 'Просмотры'],
+                ['data' => 'clicks', 'name' => 'clicks', 'title' => 'Клики'],
+                ['data' => 'conversion', 'name' => 'conversion', 'title' => 'Конверсия %'],
+                ['data' => 'shops', 'name' => 'shops', 'title' => 'Магазины'],
             ],
             'brand' => [
                 ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],

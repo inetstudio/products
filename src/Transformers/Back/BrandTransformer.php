@@ -15,7 +15,7 @@ class BrandTransformer extends TransformerAbstract
 
     /**
      * BrandTransformer constructor.
-     * 
+     *
      * @param $total
      */
     public function __construct($total)
@@ -34,12 +34,22 @@ class BrandTransformer extends TransformerAbstract
      */
     public function transform(array $data)
     {
+        $views = (isset($data['views'])) ? $data['views']['total'] : 0;
+        $clicks = (isset($data['clicks'])) ? $data['clicks']['total'] : 0;
+        $conversion = ($views == 0) ? 0 : round(($clicks/$views)*100, 2);
+
         return [
             'brand' => view('admin.module.products::back.partials.datatables.brand', [
                 'brand' => $data['brand'],
             ])->render(),
             'percents' => ($data['references'] == 0) ? 0 : round(($data['references'] / $this->total)*100, 2),
             'references' => $data['references'],
+            'views' => $views,
+            'clicks' => $clicks,
+            'conversion' => $conversion,
+            'shops' => view('admin.module.products::back.partials.datatables.shops', [
+                'shops' => (isset($data['clicks']['shops'])) ? $data['clicks']['shops'] : [],
+            ])->render(),
         ];
     }
 }
