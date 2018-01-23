@@ -2,6 +2,8 @@
 
 return [
 
+    'analytics_start_period' => '2017-09-01 00:00',
+
     /*
      * Настройки таблиц
      */
