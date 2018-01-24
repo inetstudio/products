@@ -79,8 +79,8 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
                 'brand' => mb_strtoupper(Str::before($item[1], ':')),
                 'product' => trim(Str::after($item[1], ':')),
                 'shop' => $item[2],
-                'users' => $item[3],
-                'count' => $item[4],
+                'count' => $item[3],
+                'users' => $item[4],
             ];
         })->groupBy('brand')->map(function ($item) {
             $total = $item->sum('count');
