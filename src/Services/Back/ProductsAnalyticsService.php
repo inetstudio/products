@@ -28,7 +28,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
 
         $rows = $this->analyticsQuery(
             $period,
-            'ga:uniqueEvents',
+            'ga:uniqueEvents,ga:users',
             [
                 'dimensions' => 'ga:eventCategory,ga:eventAction,ga:eventLabel',
                 'filters' => 'ga:eventCategory==Product click',
@@ -53,7 +53,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
 
         $rows = $this->analyticsQuery(
             $period,
-            'ga:uniqueEvents',
+            'ga:uniqueEvents,ga:users',
             [
                 'dimensions' => 'ga:eventCategory,ga:eventAction,ga:eventLabel',
                 'filters' => 'ga:eventCategory==Product view',
@@ -79,13 +79,16 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
                 'brand' => mb_strtoupper(Str::before($item[1], ':')),
                 'product' => trim(Str::after($item[1], ':')),
                 'shop' => $item[2],
-                'count' => $item[3],
+                'users' => $item[3],
+                'count' => $item[4],
             ];
         })->groupBy('brand')->map(function ($item) {
             $total = $item->sum('count');
+            $users = $item->sum('users');
             return [
                 'shops' => $item->groupBy('shop'),
                 'total' => $total,
+                'users' => $users,
             ];
         });
 
