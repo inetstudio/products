@@ -2,9 +2,6 @@
 
 namespace InetStudio\Products\Http\Controllers\Back;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Spatie\Analytics\Period;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
@@ -13,6 +10,7 @@ use InetStudio\Products\Transformers\Back\BrandTransformer;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
+use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
 
 /**
  * Class ProductsDataController
@@ -42,11 +40,15 @@ class ProductsDataController extends Controller
     }
 
     /**
+     * Данные для аналитики по брендам.
+     *
+     * @param ProductsAnalyticsServiceContract $analytics
+     *
      * @return mixed
      *
      * @throws \Exception
      */
-    public function dataBrands()
+    public function dataBrands(ProductsAnalyticsServiceContract $analytics)
     {
         $productables = ProductableModel::with(['product' => function ($productQuery) {
             $productQuery->select(['id', 'brand']);
@@ -59,38 +61,8 @@ class ProductsDataController extends Controller
             ]];
         });
 
-        $productsClicks = $this->getProductsClicks();
-        $productsViews = $this->getProductsViews();
-
-        $productsClicks = $productsClicks->map(function ($item, $key) {
-            return [
-                'brand' => mb_strtoupper(Str::before($item[1], ':')),
-                'product' => trim(Str::after($item[1], ':')),
-                'shop' => $item[2],
-                'count' => $item[3],
-            ];
-        })->groupBy('brand')->map(function ($item, $key) {
-            $total = $item->sum('count');
-            return [
-                'shops' => $item->groupBy('shop'),
-                'total' => $total,
-            ];
-        });
-
-        $productsViews = $productsViews->map(function ($item, $key) {
-            return [
-                'brand' => mb_strtoupper(Str::before($item[1], ':')),
-                'product' => trim(Str::after($item[1], ':')),
-                'shop' => $item[2],
-                'count' => $item[3],
-            ];
-        })->groupBy('brand')->map(function ($item, $key) {
-            $total = $item->sum('count');
-            return [
-                'shops' => $item->groupBy('shop'),
-                'total' => $total,
-            ];
-        });
+        $productsClicks = $analytics->getProductsClicks();
+        $productsViews = $analytics->getProductsViews();
 
         $items = $items->mapWithKeys(function ($item, $key) use ($productsViews, $productsClicks) {
             if ($productsViews->has($key)) {
@@ -111,6 +83,8 @@ class ProductsDataController extends Controller
     }
 
     /**
+     * Данные по привязкам продуктов бренда к материалам.
+     *
      * @param string $brand
      *
      * @return mixed
@@ -138,6 +112,8 @@ class ProductsDataController extends Controller
     }
 
     /**
+     * Данные по непривязанным продуктам бренда к материалам.
+     *
      * @param string $brand
      *
      * @return mixed
@@ -158,75 +134,5 @@ class ProductsDataController extends Controller
             ->setTransformer(new ProductTransformer)
             ->rawColumns(['preview', 'actions'])
             ->make();
-    }
-
-    private function getProductsClicks()
-    {
-        $start = config('products.analytics_start_period');
-
-        $period = ($start) ? Period::create(Carbon::createFromTimestamp(strtotime($start)), Carbon::today()) : Period::years(1);
-
-        $rows = $this->analyticsQuery(
-            $period,
-            'ga:uniqueEvents',
-            [
-                'dimensions' => 'ga:eventCategory,ga:eventAction,ga:eventLabel',
-                'filters' => 'ga:eventCategory==Product click',
-            ]
-        );
-
-        return $rows;
-    }
-
-    private function getProductsViews()
-    {
-        $start = config('products.analytics_start_period');
-
-        $period = ($start) ? Period::create(Carbon::createFromTimestamp(strtotime($start)), Carbon::today()) : Period::years(1);
-
-        $rows = $this->analyticsQuery(
-            $period,
-            'ga:uniqueEvents',
-            [
-                'dimensions' => 'ga:eventCategory,ga:eventAction,ga:eventLabel',
-                'filters' => 'ga:eventCategory==Product view',
-            ]
-        );
-
-        return $rows;
-    }
-
-    private function analyticsQuery($period, $metrics, $other)
-    {
-        $rows = [];
-
-        $stop = false;
-        $offset = 1;
-        $limit = 1000;
-
-        $requestData = array_merge([
-            'start-index' => $offset,
-            'max-results' => $limit,
-        ], $other);
-
-        while (! $stop) {
-            $analyticsData = \Analytics::performQuery(
-                $period,
-                $metrics,
-                $requestData
-            );
-
-            $offset += $limit;
-
-            $requestData['start-index'] = $offset;
-
-            if (! $analyticsData->rows) {
-                $stop = true;
-            } else {
-                $rows = array_merge($rows, $analyticsData->rows);
-            }
-        }
-
-        return collect($rows);
     }
 }

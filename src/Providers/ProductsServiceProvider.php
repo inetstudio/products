@@ -9,6 +9,8 @@ use InetStudio\Products\Console\Commands\SetupCommand;
 use InetStudio\Products\Console\Commands\ProcessGoogleFeeds;
 use InetStudio\Products\Listeners\ClearProductsCacheListener;
 use InetStudio\Products\Console\Commands\CreateFoldersCommand;
+use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsService;
+use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
 
 /**
  * Class ProductsServiceProvider
@@ -37,6 +39,7 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerBindings();
     }
 
     /**
@@ -112,5 +115,15 @@ class ProductsServiceProvider extends ServiceProvider
     protected function registerEvents(): void
     {
         Event::listen(UpdateProductsEvent::class, ClearProductsCacheListener::class);
+    }
+
+    /**
+     * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
+     *
+     * @return void
+     */
+    public function registerBindings(): void
+    {
+        $this->app->bind(ProductsAnalyticsServiceContract::class, ProductsAnalyticsService::class);
     }
 }
