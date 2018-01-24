@@ -60,6 +60,11 @@ class ProcessGoogleFeeds extends Command
 
                         $products[] = trim($product->id);
 
+                        $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
+                        if ($deleteProduct) {
+                            $deleteProduct->restore();
+                        }
+
                         $productObj = ProductModel::updateOrCreate([
                             'feed_hash' => $feedHash,
                             'g_id' => trim($product->id),
@@ -121,7 +126,7 @@ class ProcessGoogleFeeds extends Command
                         }
                     }
 
-                    ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->forceDelete();
+                    ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->delete();
                 }
             }
 
