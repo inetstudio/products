@@ -52,7 +52,7 @@ class ProductsDataController extends Controller
     {
         $productables = ProductableModel::with(['product' => function ($productQuery) {
             $productQuery->select(['id', 'brand']);
-        }])->select(['product_model_id'])->get();
+        }])->has('product')->select(['product_model_id'])->get();
 
         $items = $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
             return [mb_strtoupper($key) => [

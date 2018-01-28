@@ -9,7 +9,7 @@ use InetStudio\Products\Console\Commands\SetupCommand;
 use InetStudio\Products\Console\Commands\ProcessGoogleFeeds;
 use InetStudio\Products\Listeners\ClearProductsCacheListener;
 use InetStudio\Products\Console\Commands\CreateFoldersCommand;
-use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsService;
+use InetStudio\Products\Services\Back\ProductsAnalyticsService;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
 
 /**

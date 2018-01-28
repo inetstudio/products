@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Products\Contracts\Services\Back;
+namespace InetStudio\Products\Services\Back;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
