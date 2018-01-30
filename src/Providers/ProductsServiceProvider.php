@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use InetStudio\Products\Events\UpdateProductsEvent;
 use InetStudio\Products\Console\Commands\SetupCommand;
 use InetStudio\Products\Console\Commands\ProcessGoogleFeeds;
+use InetStudio\Products\Console\Commands\ProcessYandexFeeds;
 use InetStudio\Products\Listeners\ClearProductsCacheListener;
 use InetStudio\Products\Console\Commands\CreateFoldersCommand;
 use InetStudio\Products\Services\Back\ProductsAnalyticsService;
@@ -53,6 +54,7 @@ class ProductsServiceProvider extends ServiceProvider
             $this->commands([
                 SetupCommand::class,
                 ProcessGoogleFeeds::class,
+                ProcessYandexFeeds::class,
                 CreateFoldersCommand::class,
             ]);
         }
