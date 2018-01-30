@@ -56,7 +56,7 @@ class ProcessYandexFeeds extends Command
                     $products = [];
 
                     foreach ($xml->shop->offers->offer as $product) {
-                        $products[] = trim($product->id);
+                        $products[] = trim($product->vendorCode);
 
                         $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
                         if ($deleteProduct) {
