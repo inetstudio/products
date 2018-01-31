@@ -42,7 +42,7 @@ class BrandTransformer extends TransformerAbstract
             'brand' => view('admin.module.products::back.partials.datatables.brand', [
                 'brand' => $data['brand'],
             ])->render(),
-            'percents' => ($data['references'] == 0) ? 0 : round(($data['references'] / $this->total)*100, 2),
+            'percents' => ($this->total) ? 0 : round(($data['references'] / $this->total)*100, 2),
             'references' => $data['references'],
             'views' => $views,
             'views_users' => (isset($data['views'])) ? $data['views']['users'] : 0,

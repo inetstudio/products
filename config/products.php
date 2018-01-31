@@ -32,8 +32,8 @@ return [
                 'type' => 'POST',
                 'data' => 'function(data) { 
                     data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');
-                    data.start = $(\'#startPeriod\').val(); 
-                    data.end = $(\'#endPeriod\').val(); 
+                    data.startPeriod = $(\'input[name=startPeriod]\').val(); 
+                    data.endPeriod = $(\'input[name=endPeriod]\').val(); 
                 }',
             ],
             'brand' => [
