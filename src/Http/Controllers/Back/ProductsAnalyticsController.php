@@ -24,8 +24,7 @@ class ProductsAnalyticsController extends Controller
      */
     public function getBrandsAnalytics(): View
     {
-        $table = $this->generateTable('products', 'brands')
-            ->postAjax(route('back.products.data.analytics.brands'));
+        $table = $this->generateTable('products', 'brands');
 
         return view('admin.module.products::back.pages.analytics.index', compact('table'));
     }

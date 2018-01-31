@@ -2,6 +2,7 @@
 
 namespace InetStudio\Products\Http\Controllers\Back;
 
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
@@ -42,13 +43,14 @@ class ProductsDataController extends Controller
     /**
      * Данные для аналитики по брендам.
      *
+     * @param Request $request
      * @param ProductsAnalyticsServiceContract $analytics
      *
      * @return mixed
      *
      * @throws \Exception
      */
-    public function dataBrands(ProductsAnalyticsServiceContract $analytics)
+    public function dataBrands(Request $request, ProductsAnalyticsServiceContract $analytics)
     {
         $productables = ProductableModel::with(['product' => function ($productQuery) {
             $productQuery->select(['id', 'brand']);
@@ -61,8 +63,8 @@ class ProductsDataController extends Controller
             ]];
         });
 
-        $productsClicks = $analytics->getProductsClicks();
-        $productsViews = $analytics->getProductsViews();
+        $productsClicks = $analytics->getProductsClicks($request);
+        $productsViews = $analytics->getProductsViews($request);
 
         $items = $items->mapWithKeys(function ($item, $key) use ($productsViews, $productsClicks) {
             if ($productsViews->has($key)) {

@@ -13,7 +13,9 @@ return [
             'index' => [
                 'url' => 'back.products.data',
                 'type' => 'POST',
-                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+                'data' => 'function(data) { 
+                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');  
+                }',
             ],
             'embedded' => [
                 'url' => 'back.products.data',
@@ -21,16 +23,28 @@ return [
                     'type' => 'embedded',
                 ],
                 'type' => 'POST',
-                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+                'data' => 'function(data) { 
+                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');  
+                }',
             ],
             'brands' => [
-                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+                'url' => 'back.products.data.analytics.brands',
+                'type' => 'POST',
+                'data' => 'function(data) { 
+                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');
+                    data.start = $(\'#startPeriod\').val(); 
+                    data.end = $(\'#endPeriod\').val(); 
+                }',
             ],
             'brand' => [
-                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+                'data' => 'function(data) { 
+                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');  
+                }',
             ],
             'brand_unlinked' => [
-                'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
+                'data' => 'function(data) { 
+                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');  
+                }',
             ],
         ],
         'table' => [

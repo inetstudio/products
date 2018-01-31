@@ -4,6 +4,7 @@ namespace InetStudio\Products\Services\Back;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
 use Illuminate\Support\Collection;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
@@ -18,13 +19,13 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
     /**
      * Получаем клики по продуктам из e-com блока.
      *
+     * @param Request $request
+     *
      * @return Collection
      */
-    public function getProductsClicks(): Collection
+    public function getProductsClicks(Request $request): Collection
     {
-        $start = config('products.analytics_start_period');
-
-        $period = ($start) ? Period::create(Carbon::createFromTimestamp(strtotime($start)), Carbon::today()) : Period::years(1);
+        $period = $this->getPeriod($request);
 
         $rows = $this->analyticsQuery(
             $period,
@@ -43,13 +44,13 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
     /**
      * Получаем просмотры продуктов из e-com блока.
      *
+     * @param Request $request
+     *
      * @return Collection
      */
-    public function getProductsViews(): Collection
+    public function getProductsViews(Request $request): Collection
     {
-        $start = config('products.analytics_start_period');
-
-        $period = ($start) ? Period::create(Carbon::createFromTimestamp(strtotime($start)), Carbon::today()) : Period::years(1);
+        $period = $this->getPeriod($request);
 
         $rows = $this->analyticsQuery(
             $period,
@@ -63,6 +64,25 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
         $productsViews = $this->prepareData($rows);
 
         return $productsViews;
+    }
+
+    /**
+     * Получаем период.
+     *
+     * @param Request $request
+     *
+     * @return Period
+     */
+    private function getPeriod(Request $request): Period
+    {
+        $start = config('products.analytics_start_period');
+        $start = ($request->filled('startPeriod')) ? $request->get('startPeriod') : $start;
+        $start = ($start) ? Carbon::createFromTimestamp(strtotime($start)) : Carbon::now()->subYear();
+
+        $end = ($request->filled('endPeriod')) ? $request->get('endPeriod') : '';
+        $end = ($end) ? Carbon::createFromTimestamp(strtotime($end)) : Carbon::now();
+
+        return Period::create($start, $end);
     }
 
     /**
