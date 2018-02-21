@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
 use InetStudio\Products\Events\UpdateProductsEvent;
-use InetStudio\AdminPanel\Events\Images\UpdateImageEvent;
+use InetStudio\AdminPanel\Events\Back\Images\UpdateImageEvent;
 
 /**
  * Class ProcessYandexFeeds
