@@ -3,7 +3,7 @@
 Route::group([
     'namespace' => 'InetStudio\Products\Http\Controllers\Back',
     'middleware' => ['web', 'back.auth'],
-    'prefix' => 'back'
+    'prefix' => 'back',
 ], function () {
     Route::resource('products', 'ProductsController', ['only' => [
         'index', 'edit', 'destroy',

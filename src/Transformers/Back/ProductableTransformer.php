@@ -6,8 +6,7 @@ use League\Fractal\TransformerAbstract;
 use InetStudio\Products\Models\ProductableModel;
 
 /**
- * Class ProductableTransformer
- * @package InetStudio\Products\Transformers\Back
+ * Class ProductableTransformer.
  */
 class ProductableTransformer extends TransformerAbstract
 {

@@ -5,8 +5,7 @@ namespace InetStudio\Products\Events;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UpdateProductsEvent
- * @package InetStudio\Products\Events
+ * Class UpdateProductsEvent.
  */
 class UpdateProductsEvent
 {

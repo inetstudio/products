@@ -83,7 +83,7 @@ class ProductsRepository implements ProductsRepositoryContract
     public function getAllItems(bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery([], ['media'])->orderBy('created_at', 'desc');
-        
+
         if ($returnBuilder) {
             return $builder;
         }

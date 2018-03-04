@@ -8,8 +8,7 @@ use InetStudio\Products\Models\ProductModel;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
- * Class ProductsAnalyticsController
- * @package InetStudio\Products\Http\Controllers\Back
+ * Class ProductsAnalyticsController.
  */
 class ProductsAnalyticsController extends Controller
 {

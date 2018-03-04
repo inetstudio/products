@@ -9,8 +9,7 @@ use InetStudio\Products\Models\ProductLinkModel;
 use InetStudio\Products\Events\UpdateProductsEvent;
 
 /**
- * Class ProcessGoogleFeeds
- * @package InetStudio\Products\Console\Commands
+ * Class ProcessGoogleFeeds.
  */
 class ProcessGoogleFeeds extends Command
 {
@@ -99,7 +98,6 @@ class ProcessGoogleFeeds extends Command
                                     'object' => $productObj,
                                     'collection' => 'preview',
                                 ]));
-
                             } else {
                                 if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                     $productObj->clearMediaCollection('preview');

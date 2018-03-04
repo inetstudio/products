@@ -9,8 +9,7 @@ use InetStudio\Products\Models\ProductLinkModel;
 use InetStudio\Products\Events\UpdateProductsEvent;
 
 /**
- * Class ProcessYandexFeeds
- * @package InetStudio\Products\Console\Commands
+ * Class ProcessYandexFeeds.
  */
 class ProcessYandexFeeds extends Command
 {
@@ -93,7 +92,6 @@ class ProcessYandexFeeds extends Command
                                     'object' => $productObj,
                                     'collection' => 'preview',
                                 ]));
-
                             } else {
                                 if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                     $productObj->clearMediaCollection('preview');
