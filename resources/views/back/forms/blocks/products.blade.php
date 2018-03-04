@@ -1,5 +1,7 @@
+@inject('embeddedProductsDataTableService', 'InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract')
+
 @php
-    $productsTable = $attributes['table'];
+    $productsTable = $embeddedProductsDataTableService->html();
 
     $items = $value->map(function ($item) {
         return [

@@ -3,63 +3,26 @@
 namespace InetStudio\Products\Models;
 
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\Image\Exceptions\InvalidManipulation;
+use InetStudio\Uploads\Models\Traits\HasImages;
 use Venturecraft\Revisionable\RevisionableTrait;
+use InetStudio\Products\Contracts\Models\ProductModelContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
-/**
- * InetStudio\Products\Models\ProductModel
- *
- * @property string $availability
- * @property string $brand
- * @property string $condition
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $deleted_at
- * @property string|null $description
- * @property string $feed_hash
- * @property string $g_id
- * @property int $id
- * @property string $price
- * @property string $product_type
- * @property string $title
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\SimpleCounters\Models\SimpleCounterModel[] $counters
- * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductLinkModel[] $links
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
- * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductableModel[] $productables
- * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel onlyTrashed()
- * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereAvailability($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereBrand($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCondition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereFeedHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereGId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereProductType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Products\Models\ProductModel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Products\Models\ProductModel withoutTrashed()
- * @mixin \Eloquent
- */
-class ProductModel extends Model implements HasMediaConversions
+class ProductModel extends Model implements ProductModelContract, HasMediaConversions
 {
+    use HasImages;
     use Searchable;
     use SoftDeletes;
-    use HasMediaTrait;
     use RevisionableTrait;
     use HasSimpleCountersTrait;
+
+    protected $images = [
+        'config' => 'products',
+        'model' => 'product',
+    ];
 
     /**
      * Связанная с моделью таблица.
@@ -121,56 +84,5 @@ class ProductModel extends Model implements HasMediaConversions
         $arr = array_only($this->toArray(), ['id', 'title', 'description', 'price', 'condition', 'availability', 'brand', 'product_type']);
 
         return $arr;
-    }
-
-    /**
-     * Регистрируем преобразования изображений.
-     *
-     * @param Media|null $media
-     *
-     * @throws InvalidManipulation
-     */
-    public function registerMediaConversions(Media $media = null)
-    {
-        $quality = (config('products.images.quality')) ? config('products.images.quality') : 75;
-
-        if (config('products.images.conversions')) {
-            foreach (config('products.images.conversions') as $collection => $image) {
-                foreach ($image as $crop) {
-                    foreach ($crop as $conversion) {
-                        $imageConversion = $this->addMediaConversion($conversion['name']);
-
-                        if (isset($conversion['size']['width'])) {
-                            $imageConversion->width($conversion['size']['width']);
-                        }
-
-                        if (isset($conversion['size']['height'])) {
-                            $imageConversion->height($conversion['size']['height']);
-                        }
-
-                        if (isset($conversion['crop']['width']) && isset($conversion['crop']['height'])) {
-                            $imageConversion->crop('crop-center', $conversion['crop']['width'], $conversion['crop']['height']);
-                        }
-
-                        if (isset($conversion['fit']['width']) && isset($conversion['fit']['height'])) {
-                            $imageConversion->fit('fill', $conversion['fit']['width'], $conversion['fit']['height']);
-
-                            if (isset($conversion['fit']['background'])) {
-                                $imageConversion->background($conversion['fit']['background']);
-                            }
-                        }
-
-                        if (isset($conversion['quality'])) {
-                            $imageConversion->quality($conversion['quality']);
-                            $imageConversion->optimize();
-                        } else {
-                            $imageConversion->quality($quality);
-                        }
-
-                        $imageConversion->performOnCollections($collection);
-                    }
-                }
-            }
-        }
     }
 }

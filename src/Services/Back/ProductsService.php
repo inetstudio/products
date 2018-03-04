@@ -1,20 +1,22 @@
 <?php
 
-namespace InetStudio\Products\Http\Controllers\Back\Traits;
+namespace InetStudio\Products\Services\Back;
+
+use InetStudio\Products\Contracts\Services\Back\ProductsServiceContract;
 
 /**
- * Trait ProductsManipulationsTrait
- * @package InetStudio\Products\Http\Controllers\Back\Traits
+ * Class ProductsService.
  */
-trait ProductsManipulationsTrait
+class ProductsService implements ProductsServiceContract
 {
     /**
-     * Сохраняем продукты.
+     * Присваиваем продукты объекту.
+     *
+     * @param $request
      *
      * @param $item
-     * @param $request
      */
-    private function saveProducts($item, $request): void
+    public function attachToObject($request, $item)
     {
         if ($request->filled('products')) {
             $ids = [];

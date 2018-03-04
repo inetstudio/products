@@ -119,20 +119,22 @@ return [
     'images' => [
         'quality' => 75,
         'conversions' => [
-            'preview' => [
-                'default' => [
-                    [
-                        'name' => 'preview_default',
-                        'size' => [
-                            'width' => 260,
-                            'height' => 287,
+            'product' => [
+                'preview' => [
+                    'default' => [
+                        [
+                            'name' => 'preview_default',
+                            'size' => [
+                                'width' => 260,
+                                'height' => 287,
+                            ],
                         ],
-                    ],
-                    [
-                        'name' => 'preview_admin',
-                        'size' => [
-                            'width' => 128,
-                            'height' => 128,
+                        [
+                            'name' => 'preview_admin',
+                            'size' => [
+                                'width' => 128,
+                                'height' => 128,
+                            ],
                         ],
                     ],
                 ],

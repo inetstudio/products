@@ -127,5 +127,21 @@ class ProductsServiceProvider extends ServiceProvider
     public function registerBindings(): void
     {
         $this->app->bind(ProductsAnalyticsServiceContract::class, ProductsAnalyticsService::class);
+
+        // Controllers
+        $this->app->bind('InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract', 'InetStudio\Products\Http\Controllers\Back\ProductsDataController');
+
+        // Models
+        $this->app->bind('InetStudio\Products\Contracts\Models\ProductModelContract', 'InetStudio\Products\Models\ProductModel');
+
+        // Repositories
+        $this->app->bind('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract', 'InetStudio\Products\Repositories\ProductsRepository');
+
+        // Services
+        $this->app->bind('InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\EmbeddedProductsDataTableService');
+        $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract', 'InetStudio\Products\Services\Back\ProductsService');
+
+        // Transformers
+        $this->app->bind('InetStudio\Products\Contracts\Transformers\Back\EmbeddedProductTransformerContract', 'InetStudio\Products\Transformers\Back\EmbeddedProductTransformer');
     }
 }

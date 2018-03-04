@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
 use InetStudio\Products\Events\UpdateProductsEvent;
-use InetStudio\AdminPanel\Events\Back\Images\UpdateImageEvent;
 
 /**
  * Class ProcessGoogleFeeds
@@ -96,7 +95,11 @@ class ProcessGoogleFeeds extends Command
                                 ];
                                 $media->save();
 
-                                event(new UpdateImageEvent($productObj, 'preview'));
+                                event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
+                                    'object' => $productObj,
+                                    'collection' => 'preview',
+                                ]));
+
                             } else {
                                 if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                     $productObj->clearMediaCollection('preview');

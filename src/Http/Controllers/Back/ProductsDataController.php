@@ -12,12 +12,13 @@ use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
+use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract;
+use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract;
 
 /**
- * Class ProductsDataController
- * @package InetStudio\Products\Http\Controllers\Back
+ * Class ProductsDataController.
  */
-class ProductsDataController extends Controller
+class ProductsDataController extends Controller implements ProductsDataControllerContract
 {
     /**
      * DataTables ServerSide.
@@ -38,6 +39,18 @@ class ProductsDataController extends Controller
             ->setTransformer($transformer)
             ->rawColumns(['preview', 'actions'])
             ->make();
+    }
+
+    /**
+     * Получаем данные для отображения во встроенной таблице.
+     *
+     * @param EmbeddedProductsDataTableServiceContract $dataTableService
+     *
+     * @return mixed
+     */
+    public function dataEmbedded(EmbeddedProductsDataTableServiceContract $dataTableService)
+    {
+        return $dataTableService->ajax();
     }
 
     /**
