@@ -14,8 +14,7 @@ use InetStudio\Products\Services\Back\ProductsAnalyticsService;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
 
 /**
- * Class ProductsServiceProvider
- * @package InetStudio\Products\Providers
+ * Class ProductsServiceProvider.
  */
 class ProductsServiceProvider extends ServiceProvider
 {

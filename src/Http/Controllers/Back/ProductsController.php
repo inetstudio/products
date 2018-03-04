@@ -9,8 +9,7 @@ use InetStudio\Products\Models\ProductModel;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
- * Class ProductsController
- * @package InetStudio\Products\Http\Controllers\Back
+ * Class ProductsController.
  */
 class ProductsController extends Controller
 {

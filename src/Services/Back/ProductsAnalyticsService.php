@@ -10,12 +10,10 @@ use Illuminate\Support\Collection;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
 
 /**
- * Class ProductsAnalyticsService
- * @package InetStudio\Products\Contracts\Services\Back
+ * Class ProductsAnalyticsService.
  */
 class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
 {
-
     /**
      * Получаем клики по продуктам из e-com блока.
      *
@@ -105,6 +103,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
         })->groupBy('brand')->map(function ($item) {
             $total = $item->sum('count');
             $users = $item->sum('users');
+
             return [
                 'shops' => $item->groupBy('shop'),
                 'total' => $total,

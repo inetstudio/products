@@ -3,11 +3,9 @@
 namespace InetStudio\Products\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Products\Models\ProductModel;
 
 /**
- * Class BrandTransformer
- * @package InetStudio\Products\Transformers\Back
+ * Class BrandTransformer.
  */
 class BrandTransformer extends TransformerAbstract
 {
@@ -36,13 +34,13 @@ class BrandTransformer extends TransformerAbstract
     {
         $views = (isset($data['views'])) ? $data['views']['total'] : 0;
         $clicks = (isset($data['clicks'])) ? $data['clicks']['total'] : 0;
-        $conversion = ($views == 0) ? 0 : round(($clicks/$views)*100, 2);
+        $conversion = ($views == 0) ? 0 : round(($clicks / $views) * 100, 2);
 
         return [
             'brand' => view('admin.module.products::back.partials.datatables.brand', [
                 'brand' => $data['brand'],
             ])->render(),
-            'percents' => ($this->total == 0) ? 0 : round(($data['references'] / $this->total)*100, 2),
+            'percents' => ($this->total == 0) ? 0 : round(($data['references'] / $this->total) * 100, 2),
             'references' => $data['references'],
             'views' => $views,
             'views_users' => (isset($data['views'])) ? $data['views']['users'] : 0,

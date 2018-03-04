@@ -5,8 +5,7 @@ namespace InetStudio\Products\Listeners;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * Class ClearProductsCacheListener
- * @package InetStudio\Products\Listeners
+ * Class ClearProductsCacheListener.
  */
 class ClearProductsCacheListener
 {

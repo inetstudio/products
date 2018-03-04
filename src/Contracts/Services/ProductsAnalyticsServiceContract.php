@@ -3,10 +3,8 @@
 namespace InetStudio\Products\Contracts\Services;
 
 /**
- * Interface ProductsAnalyticsServiceContract
- * @package InetStudio\Pages\Contracts\Services
+ * Interface ProductsAnalyticsServiceContract.
  */
 interface ProductsAnalyticsServiceContract
 {
-
 }
