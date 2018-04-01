@@ -13,16 +13,6 @@
     $items = json_encode($items);
 @endphp
 
-@pushonce('styles:datatables')
-    <!-- DATATABLES -->
-    <link href="{!! asset('admin/css/plugins/datatables/datatables.min.css') !!}" rel="stylesheet">
-@endpushonce
-
-@pushonce('styles:products_custom')
-    <!-- CUSTOM STYLE -->
-    <link href="{!! asset('admin/css/modules/products/custom.css') !!}" rel="stylesheet">
-@endpushonce
-
 <div class="row products_wrapper">
     <div class="col-lg-12">
         <div class="panel-group float-e-margins" id="productsAccordion">
@@ -35,7 +25,7 @@
                 <div id="collapseProducts" class="panel-collapse collapse" aria-expanded="false">
                     <div class="panel-body">
                         <div class="m-b-md">
-                            <ul class="products-list m-t small-list" id="{{ $name }}_list" data-items="{{ $items }}">
+                            <ul class="products-package products-list m-t small-list" id="{{ $name }}_list" data-items="{{ $items }}">
                                 <li v-for="(item, index) in items">
                                     <span class="m-l-xs">@{{ itemTitles[index] }}</span>
                                     <div class="btn-group pull-right">
@@ -56,16 +46,6 @@
     </div>
 </div>
 
-@pushonce('scripts:datatables')
-    <!-- DATATABLES -->
-    <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
-@endpushonce
-
 @pushonce('scripts:datatable_products_embedded')
     {!! $productsTable->scripts() !!}
-@endpushonce
-
-@pushonce('scripts:products_custom')
-    <!-- CUSTOM SCRIPT -->
-    <script src="{!! asset('admin/js/modules/products/custom.js') !!}"></script>
 @endpushonce

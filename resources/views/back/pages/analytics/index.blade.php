@@ -6,11 +6,6 @@
 
 @section('title', $title)
 
-@pushonce('styles:datatables')
-    <!-- DATATABLES -->
-    <link href="{!! asset('admin/css/plugins/datatables/datatables.min.css') !!}" rel="stylesheet">
-@endpushonce
-
 @section('content')
 
     @push('breadcrumbs')
@@ -61,16 +56,6 @@
     </div>
 @endsection
 
-@pushonce('scripts:datatables')
-    <!-- DATATABLES -->
-    <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
-@endpushonce
-
 @pushonce('scripts:datatables_products')
     {!! $table->scripts() !!}
-@endpushonce
-
-@pushonce('scripts:products_custom')
-    <!-- PRODUCTS CUSTOM -->
-    <script src="{!! asset('admin/js/modules/products/custom.js') !!}"></script>
 @endpushonce
