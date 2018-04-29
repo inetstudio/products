@@ -1,10 +1,10 @@
 $(document).ready(function() {
     if ($('.products_wrapper').length > 0) {
-        var wrapper = $(this),
-            productsComponents = [];
+            var productsComponents = [];
 
         $('.products_wrapper .products-list').each(function () {
-            var name = $(this).attr('id'),
+            var wrapper = $(this).closest('.products_wrapper'),
+                name = $(this).attr('id'),
                 items = JSON.parse($(this).attr('data-items'));
 
             productsComponents[name] = new Vue({

@@ -134,9 +134,12 @@ class ProductsServiceProvider extends ServiceProvider
 
         // Services
         $this->app->bind('InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\EmbeddedProductsDataTableService');
+        $this->app->bind('InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\ModalProductsDataTableService');
         $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract', 'InetStudio\Products\Services\Back\ProductsService');
+        $this->app->bind('InetStudio\Products\Contracts\Services\Front\ProductsServiceContract', 'InetStudio\Products\Services\Front\ProductsService');
 
         // Transformers
         $this->app->bind('InetStudio\Products\Contracts\Transformers\Back\EmbeddedProductTransformerContract', 'InetStudio\Products\Transformers\Back\EmbeddedProductTransformer');
+        $this->app->bind('InetStudio\Products\Contracts\Transformers\Back\ModalProductTransformerContract', 'InetStudio\Products\Transformers\Back\ModalProductTransformer');
     }
 }

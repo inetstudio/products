@@ -12,6 +12,7 @@ use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
 use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
+use InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract;
 use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract;
 use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract;
 
@@ -49,6 +50,18 @@ class ProductsDataController extends Controller implements ProductsDataControlle
      * @return mixed
      */
     public function dataEmbedded(EmbeddedProductsDataTableServiceContract $dataTableService)
+    {
+        return $dataTableService->ajax();
+    }
+
+    /**
+     * Получаем данные для отображения в модальном окне.
+     *
+     * @param ModalProductsDataTableServiceContract $dataTableService
+     *
+     * @return mixed
+     */
+    public function dataModal(ModalProductsDataTableServiceContract $dataTableService)
     {
         return $dataTableService->ajax();
     }

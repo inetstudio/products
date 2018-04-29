@@ -24,4 +24,5 @@ Route::group([
     'prefix' => 'back',
 ], function () {
     Route::any('products/data/embedded', 'ProductsDataControllerContract@dataEmbedded')->name('back.products.data.embedded');
+    Route::any('products/data/modal', 'ProductsDataControllerContract@dataModal')->name('back.products.data.modal');
 });
