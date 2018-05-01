@@ -31,7 +31,7 @@ class ModalProductTransformer extends TransformerAbstract implements ModalProduc
             'title' => $product->title,
             'description' => $product->description,
             'actions' => view('admin.module.products::back.partials.datatables.actions_modal', [
-                'id' => $product->id,
+                'item' => $product,
             ])->render(),
         ];
     }
