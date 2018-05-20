@@ -15,9 +15,13 @@ class BladeServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::directive('productLink', function ($expression) {
-            list($id, $word) = array_map('trim', explode(',',str_replace(['(',')', "'"], '', $expression), 2));
+            $params = explode(',', $expression, 2);
+            $params = array_map('trim', $params, array_fill(0, count($params),"' \t\n\r\0\x0B"));
 
-            return view('admin.module.products::back.partials.content.product_link', compact('id', 'word'));
+            return view('admin.module.products::back.partials.content.product_link', [
+                'id' => $params[0],
+                'word' => $params[1],
+            ]);
         });
     }
 
