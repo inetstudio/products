@@ -11,6 +11,7 @@
     ],
     "require": {
       "inetstudio/admin-panel": "1.6.*",
+      "inetstudio/widgets": "1.6.*",
       "spatie/laravel-analytics": "^3.5"
     },
     "autoload": {
