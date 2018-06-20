@@ -74,7 +74,7 @@ class SetupCommand extends Command
                 'description' => 'Publish migrations',
                 'command' => 'vendor:publish',
                 'params' => [
-                    '--provider' => 'InetStudio\Products\ProductsServiceProvider',
+                    '--provider' => 'InetStudio\Products\Providers\ProductsServiceProvider',
                     '--tag' => 'migrations',
                 ],
             ],
@@ -93,7 +93,7 @@ class SetupCommand extends Command
                 'description' => 'Publish config',
                 'command' => 'vendor:publish',
                 'params' => [
-                    '--provider' => 'InetStudio\Products\ProductsServiceProvider',
+                    '--provider' => 'InetStudio\Products\Providers\ProductsServiceProvider',
                     '--tag' => 'config',
                 ],
             ],
