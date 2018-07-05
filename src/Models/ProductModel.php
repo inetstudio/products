@@ -10,14 +10,16 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
+use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 
-class ProductModel extends Model implements ProductModelContract, HasMediaConversions
+class ProductModel extends Model implements ProductModelContract, HasMediaConversions, FavoritableContract
 {
     use HasImages;
     use Searchable;
     use SoftDeletes;
     use RevisionableTrait;
     use HasSimpleCountersTrait;
+    use \InetStudio\Favorites\Models\Traits\Favoritable;
 
     protected $images = [
         'config' => 'products',

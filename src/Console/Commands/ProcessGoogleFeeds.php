@@ -38,7 +38,7 @@ class ProcessGoogleFeeds extends Command
 
         if (config('products.feeds.google')) {
             foreach (config('products.feeds.google') as $productsBrand => $url) {
-                $this->info('Обработка бренда: '.$productsBrand);
+                $this->info(PHP_EOL.'Обработка бренда: '.$productsBrand);
 
                 $feedHash = md5($url);
 
@@ -52,6 +52,8 @@ class ProcessGoogleFeeds extends Command
                     $xml = simplexml_load_string($contents);
 
                     $products = [];
+
+                    $bar = $this->output->createProgressBar(count($xml->channel->item));
 
                     foreach ($xml->channel->item as $item) {
                         $product = $item->children('g', true);
@@ -125,7 +127,11 @@ class ProcessGoogleFeeds extends Command
                                 ]);
                             }
                         }
+
+                        $bar->advance();
                     }
+
+                    $bar->finish();
 
                     ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->delete();
                 }
