@@ -42,14 +42,14 @@ class ProductsService implements ProductsServiceContract
     /**
      * Получаем сохраненные объекты пользователя.
      *
-     * @param int $userID
+     * @param mixed $userID
      * @param array $extColumns
      * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getProductsFavoritedByUser(int $userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getProductsFavoritedByUser($userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
         return $this->repository->getItemsFavoritedByUser($userID, $extColumns, $with, $returnBuilder);
     }

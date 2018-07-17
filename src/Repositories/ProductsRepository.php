@@ -90,14 +90,14 @@ class ProductsRepository implements ProductsRepositoryContract
     /**
      * Получаем сохраненные объекты пользователя.
      *
-     * @param int $userID
+     * @param mixed $userID
      * @param array $extColumns
      * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getItemsFavoritedByUser(int $userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsFavoritedByUser($userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery($extColumns, $with)->whereFavoritedBy('product', $userID);
 
