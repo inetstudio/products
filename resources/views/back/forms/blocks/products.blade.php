@@ -24,6 +24,15 @@
                 </div>
                 <div id="collapseProducts" class="panel-collapse collapse" aria-expanded="false">
                     <div class="panel-body">
+
+                        @if (isset($attributes['item']) && method_exists($attributes['item'], 'getCustomField'))
+                            {!! Form::string('custom[ecom_header]', $attributes['item']->getCustomField('ecom_header'), [
+                                 'label' => [
+                                     'title' => 'Заголовок',
+                                 ],
+                             ]) !!}
+                        @endif
+
                         <div class="m-b-md">
                             <ul class="products-package products-list m-t small-list" id="{{ $name }}_list" data-items="{{ $items }}">
                                 <li v-for="(item, index) in items">
