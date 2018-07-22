@@ -148,6 +148,7 @@ class ProductsServiceProvider extends ServiceProvider
         $this->app->bind('InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\ModalProductsDataTableService');
         $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract', 'InetStudio\Products\Services\Back\ProductsService');
         $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsItemsServiceContract', 'InetStudio\Products\Services\Back\ProductsItemsService');
+        $this->app->bind('InetStudio\Products\Contracts\Services\Front\ProductsItemsServiceContract', 'InetStudio\Products\Services\Front\ProductsItemsService');
         $this->app->bind('InetStudio\Products\Contracts\Services\Front\ProductsServiceContract', 'InetStudio\Products\Services\Front\ProductsService');
 
         // Transformers
