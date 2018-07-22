@@ -26,3 +26,13 @@ Route::group([
     Route::any('products/data/analytics/brand/{brand}', 'ProductsDataController@dataBrand')->name('back.products.data.analytics.brand');
     Route::any('products/data/analytics/brand/unlinked/{brand}', 'ProductsDataController@dataBrandUnlinked')->name('back.products.data.analytics.brand.unlinked');
 });
+
+Route::group([
+    'namespace' => 'InetStudio\Products\Contracts\Http\Controllers\Back',
+    'middleware' => ['web', 'back.auth'],
+    'prefix' => 'back/products',
+], function () {
+    Route::resource('items', 'ProductsItemsControllerContract', ['only' => [
+        'show', 'store', 'update', 'destroy',
+    ], 'as' => 'back.products']);
+});

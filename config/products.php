@@ -139,6 +139,54 @@ return [
                     ],
                 ],
             ],
+            'product_item' => [
+                'preview' => [
+                    'vertical' => [
+                        [
+                            'name' => 'preview_vertical',
+                            'size' => [
+                                'width' => 300,
+                                'height' => 400,
+                            ],
+                        ],
+                    ],
+                ],
+                'content' => [
+                    'default' => [
+                        [
+                            'name' => 'content_admin',
+                            'size' => [
+                                'width' => 140,
+                            ],
+                        ],
+                        [
+                            'name' => 'content_front',
+                            'quality' => 70,
+                            'fit' => [
+                                'width' => 768,
+                                'height' => 512,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'crops' => [
+            'product_item' => [
+                'preview' => [
+                    [
+                        'title' => 'Вертикальная ориентация',
+                        'name' => 'vertical',
+                        'ratio' => '3/4',
+                        'size' => [
+                            'width' => 300,
+                            'height' => 400,
+                            'type' => 'min',
+                            'description' => 'Минимальный размер области — 300x400 пикселей'
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
 ];
