@@ -29,17 +29,6 @@ class ProductsServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
-        $this->registerEvents();
-    }
-
-    /**
-     * Регистрация привязки в контейнере.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        $this->registerBindings();
     }
 
     /**
@@ -102,57 +91,5 @@ class ProductsServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.products');
-    }
-
-    /**
-     * Регистрация событий.
-     *
-     * @return void
-     */
-    protected function registerEvents(): void
-    {
-        Event::listen(UpdateProductsEvent::class, ClearProductsCacheListener::class);
-    }
-
-    /**
-     * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
-     *
-     * @return void
-     */
-    public function registerBindings(): void
-    {
-        $this->app->bind(ProductsAnalyticsServiceContract::class, ProductsAnalyticsService::class);
-
-        // Controllers
-        $this->app->bind('InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract', 'InetStudio\Products\Http\Controllers\Back\ProductsDataController');
-        $this->app->bind('InetStudio\Products\Contracts\Http\Controllers\Back\ProductsItemsControllerContract', 'InetStudio\Products\Http\Controllers\Back\ProductsItemsController');
-
-        // Models
-        $this->app->bind('InetStudio\Products\Contracts\Models\ProductItemModelContract', 'InetStudio\Products\Models\ProductItemModel');
-        $this->app->bind('InetStudio\Products\Contracts\Models\ProductModelContract', 'InetStudio\Products\Models\ProductModel');
-
-        // Repositories
-        $this->app->bind('InetStudio\Products\Contracts\Repositories\ProductsItemsRepositoryContract', 'InetStudio\Products\Repositories\ProductsItemsRepository');
-        $this->app->bind('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract', 'InetStudio\Products\Repositories\ProductsRepository');
-
-        // Requests
-        $this->app->bind('InetStudio\Products\Contracts\Http\Requests\Back\SaveProductItemRequestContract', 'InetStudio\Products\Http\Requests\Back\SaveProductItemRequest');
-
-        // Responses
-        $this->app->bind('InetStudio\Products\Contracts\Http\Responses\Back\ProductsItems\DestroyResponseContract', 'InetStudio\Products\Http\Responses\Back\ProductsItems\DestroyResponse');
-        $this->app->bind('InetStudio\Products\Contracts\Http\Responses\Back\ProductsItems\SaveResponseContract', 'InetStudio\Products\Http\Responses\Back\ProductsItems\SaveResponse');
-        $this->app->bind('InetStudio\Products\Contracts\Http\Responses\Back\ProductsItems\ShowResponseContract', 'InetStudio\Products\Http\Responses\Back\ProductsItems\ShowResponse');
-        
-        // Services
-        $this->app->bind('InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\EmbeddedProductsDataTableService');
-        $this->app->bind('InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract', 'InetStudio\Products\Services\Back\ModalProductsDataTableService');
-        $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract', 'InetStudio\Products\Services\Back\ProductsService');
-        $this->app->bind('InetStudio\Products\Contracts\Services\Back\ProductsItemsServiceContract', 'InetStudio\Products\Services\Back\ProductsItemsService');
-        $this->app->bind('InetStudio\Products\Contracts\Services\Front\ProductsItemsServiceContract', 'InetStudio\Products\Services\Front\ProductsItemsService');
-        $this->app->bind('InetStudio\Products\Contracts\Services\Front\ProductsServiceContract', 'InetStudio\Products\Services\Front\ProductsService');
-
-        // Transformers
-        $this->app->bind('InetStudio\Products\Contracts\Transformers\Back\EmbeddedProductTransformerContract', 'InetStudio\Products\Transformers\Back\EmbeddedProductTransformer');
-        $this->app->bind('InetStudio\Products\Contracts\Transformers\Back\ModalProductTransformerContract', 'InetStudio\Products\Transformers\Back\ModalProductTransformer');
     }
 }

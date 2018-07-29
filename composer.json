@@ -24,6 +24,7 @@
         "providers": [
           "InetStudio\\Products\\Providers\\BladeServiceProvider",
           "InetStudio\\Products\\Providers\\FormBuilderServiceProvider",
+          "InetStudio\\Products\\Providers\\ProductsBindingsServiceProvider",
           "InetStudio\\Products\\Providers\\ProductsServiceProvider"
         ]
       }
