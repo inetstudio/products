@@ -5,6 +5,9 @@ namespace InetStudio\Products\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class BladeServiceProvider.
+ */
 class BladeServiceProvider extends ServiceProvider
 {
     /**
@@ -23,15 +26,5 @@ class BladeServiceProvider extends ServiceProvider
                 'word' => $params[1],
             ]);
         });
-    }
-
-    /**
-     * Регистрация привязки в контейнере.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        //
     }
 }

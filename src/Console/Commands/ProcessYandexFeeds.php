@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductLinkModel;
-use InetStudio\Products\Events\UpdateProductsEvent;
 
 /**
  * Class ProcessYandexFeeds.
@@ -125,7 +124,7 @@ class ProcessYandexFeeds extends Command
                 }
             }
 
-            event(new UpdateProductsEvent());
+
         }
     }
 

@@ -19,14 +19,4 @@ class FormBuilderServiceProvider extends ServiceProvider
     {
         FormBuilder::component('products', 'admin.module.products::back.forms.blocks.products', ['name' => null, 'value' => null, 'attributes' => null]);
     }
-
-    /**
-     * Регистрация привязки в контейнере.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        //
-    }
 }

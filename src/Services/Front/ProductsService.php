@@ -5,7 +5,6 @@ namespace InetStudio\Products\Services\Front;
 use Illuminate\Http\Request;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Products\Contracts\Services\Front\ProductsServiceContract;
-use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
 
 /**
  * Class ProductsService.
@@ -13,18 +12,16 @@ use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
 class ProductsService implements ProductsServiceContract
 {
     /**
-     * @var ProductsRepositoryContract
+     * @var
      */
     private $repository;
 
     /**
      * EmbeddedProductsDataTableService constructor.
-     *
-     * @param ProductsRepositoryContract $repository
      */
-    public function __construct(ProductsRepositoryContract $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository = app()->make('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract');
     }
 
     /**
