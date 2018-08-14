@@ -24,7 +24,7 @@ class CreateProductsTables extends Migration
 
         Schema::create('products_links', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('product_id')->unsigned();
+            $table->integer('product_id')->unsigned()->index();
             $table->string('link', 1000);
             $table->timestamps();
             $table->softDeletes();
@@ -34,11 +34,12 @@ class CreateProductsTables extends Migration
 
         Schema::create('productables', function (Blueprint $table) {
             $table->integer('product_model_id')->unsigned();
-            $table->integer('productable_id')->unsigned();
-            $table->string('productable_type');
+            $table->morphs('productable');
             $table->timestamps();
 
             $table->foreign('product_model_id')->references('id')->on('products')->onDelete('cascade');
+
+            $table->index(['productable_id', 'productable_type']);
         });
 
         Schema::create('products_items', function (Blueprint $table) {

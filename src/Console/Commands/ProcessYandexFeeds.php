@@ -53,21 +53,35 @@ class ProcessYandexFeeds extends Command
                     $products = [];
 
                     foreach ($xml->shop->offers->offer as $product) {
+                        $isModified = false;
+                        $isNew = false;
+
                         $products[] = trim($product->vendorCode);
 
                         $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
                         if ($deleteProduct) {
                             $deleteProduct->restore();
+
+                            $isModified = true;
                         }
 
-                        $productObj = ProductModel::updateOrCreate([
+                        $productObj = ProductModel::where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
+
+                        $productData = [
                             'feed_hash' => $feedHash,
                             'g_id' => trim($product->vendorCode),
-                        ], [
                             'title' => isset($product->model) ? trim($product->model) : '',
                             'description' => isset($product->description) ? trim($product->description) : '',
                             'brand' => isset($product->vendor) ? trim($product->vendor) : '',
-                        ]);
+                        ];
+
+                        if ($productObj) {
+                            $isModified = $productObj->update($productData);
+                        } else {
+                            $productObj = ProductModel::create($productData);
+
+                            $isNew = true;
+                        }
 
                         $imageLink = isset($product->picture) ? trim($product->picture) : '';
                         if ($imageLink) {
@@ -91,6 +105,8 @@ class ProcessYandexFeeds extends Command
                                     'object' => $productObj,
                                     'collection' => 'preview',
                                 ]));
+
+                                $isModified = true;
                             } else {
                                 if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                     $productObj->clearMediaCollection('preview');
@@ -102,29 +118,95 @@ class ProcessYandexFeeds extends Command
                         if (isset($product->url)) {
                             $productLink = isset($product->url) ? $product->url : '';
                             if ($productLink) {
-                                ProductLinkModel::updateOrCreate([
-                                    'product_id' => $productObj->id,
-                                ], [
-                                    'link' => trim($productLink),
-                                ]);
+                                $isModified = $this->createLinks($productObj, [trim($productLink)]);
                             }
                         } elseif (isset($product->links)) {
-                            ProductLinkModel::where('product_id', $productObj->id)->forceDelete();
-
+                            $productLinks = [];
                             foreach ($product->links->link as $link) {
-                                ProductLinkModel::create([
-                                    'product_id' => $productObj->id,
-                                    'link' => trim($link->href),
-                                ]);
+                                $productLinks[] = trim($link->href);
                             }
+
+                            $isModified = $this->createLinks($productObj, [$productLinks]);
+                        }
+
+                        if (! $isNew && $isModified) {
+                            event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
+                                'object' => $productObj,
+                            ]));
                         }
                     }
 
-                    ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->delete();
+                    $this->deleteProducts($feedHash, $products);
                 }
             }
+        }
+    }
 
+    /**
+     * Создаем ссылку на продукт.
+     *
+     * @param ProductModel $productObject
+     * @param array $links
+     *
+     * @return bool
+     */
+    protected function createLinks(ProductModel $productObject, array $links): bool
+    {
+        $productIsModified = false;
 
+        $productObjectLinks = ProductLinkModel::where('product_id', $productObject->id)->whereNotIn('link', $links)->get();
+
+        if ($productObjectLinks->count() > 0) {
+            foreach ($productObjectLinks as $productObjectLink) {
+                $productObjectLink->delete();
+            }
+
+            $productIsModified = true;
+        }
+
+        foreach ($links as $link) {
+            $productObjectLink = ProductLinkModel::where('product_id', $productObject->id)->where('link', $link)->first();
+
+            $linkData = [
+                'product_id' => $productObject->id,
+                'link' => $link,
+            ];
+
+            if ($productObjectLink) {
+                $updateFlag = $productObjectLink->update($linkData);
+
+                if ($updateFlag) {
+                    $productIsModified = true;
+                }
+            } else {
+                ProductLinkModel::create($linkData);
+
+                $productIsModified = true;
+            }
+        }
+
+        return $productIsModified;
+    }
+
+    /**
+     * Удаляем продукты.
+     *
+     * @param string $feedHash
+     * @param array $products
+     */
+    protected function deleteProducts(string $feedHash, array $products)
+    {
+        ProductModel::where('feed_hash', $feedHash)->whereNotIn('g_id', $products)->delete();
+
+        $deletedProducts = ProductModel::onlyTrashed()
+            ->where('feed_hash', $feedHash)
+            ->whereNotIn('g_id', $products)
+            ->get();
+
+        foreach ($deletedProducts as $product) {
+            event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
+                'object' => $product,
+            ]));
         }
     }
 
