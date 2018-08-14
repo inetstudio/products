@@ -84,7 +84,11 @@ class ProcessGoogleFeeds extends Command
                         ];
 
                         if ($productObj) {
-                            $isModified = $productObj->update($productData);
+                            $productObj->fill($productData);
+
+                            $isModified = $productObj->isDirty();
+
+                            $productObj->save();
                         } else {
                             $productObj = ProductModel::create($productData);
 
@@ -123,10 +127,11 @@ class ProcessGoogleFeeds extends Command
                             }
                         }
 
+                        $isLinksModified = false;
                         if (isset($product->link) || isset($item->link)) {
                             $productLink = (isset($product->link)) ? $product->link : ((isset($item->link)) ? $item->link : '');
                             if ($productLink) {
-                                $isModified = $this->createLinks($productObj, [trim($productLink)]);
+                                $isLinksModified = $this->createLinks($productObj, [trim($productLink)]);
                             }
                         } elseif (isset($product->links)) {
                             $productLinks = [];
@@ -134,7 +139,11 @@ class ProcessGoogleFeeds extends Command
                                 $productLinks[] = trim($link->href);
                             }
 
-                            $isModified = $this->createLinks($productObj, [$productLinks]);
+                            $isLinksModified = $this->createLinks($productObj, $productLinks);
+                        }
+
+                        if ($isLinksModified) {
+                            $isModified = true;
                         }
 
                         if (! $isNew && $isModified) {
@@ -187,7 +196,9 @@ class ProcessGoogleFeeds extends Command
             ];
 
             if ($productObjectLink) {
-                $updateFlag = $productObjectLink->update($linkData);
+                $productObjectLink->fill($linkData);
+                $updateFlag = $productObjectLink->isDirty();
+                $productObjectLink->save();
 
                 if ($updateFlag) {
                     $productIsModified = true;
