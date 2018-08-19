@@ -14,7 +14,7 @@ class ProductsService implements ProductsServiceContract
     /**
      * @var
      */
-    private $repository;
+    public $repository;
 
     /**
      * EmbeddedProductsDataTableService constructor.
@@ -40,15 +40,13 @@ class ProductsService implements ProductsServiceContract
      * Получаем сохраненные объекты пользователя.
      *
      * @param mixed $userID
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getProductsFavoritedByUser($userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getProductsFavoritedByUser($userID, array $params = [])
     {
-        return $this->repository->getItemsFavoritedByUser($userID, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemsFavoritedByUser($userID, $params);
     }
 
     /**
@@ -59,8 +57,7 @@ class ProductsService implements ProductsServiceContract
      *
      * @return array
      */
-    public function getWidgetData(Request $request,
-                                  ProductModelContract $item): array
+    public function getWidgetData(Request $request, ProductModelContract $item): array
     {
         $data = [
             'product' => $item,
