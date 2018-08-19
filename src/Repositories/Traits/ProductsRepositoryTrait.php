@@ -11,19 +11,14 @@ trait ProductsRepositoryTrait
      * Получаем объекты по продуктам.
      *
      * @param int $productID
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getItemsByProduct(int $productID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsByProduct(int $productID, array $params = [])
     {
-        $builder = $this->getItemsQuery($extColumns, $with)->withProducts($productID);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($params)
+            ->withProducts($productID);
 
         return $builder->get();
     }
@@ -32,19 +27,14 @@ trait ProductsRepositoryTrait
      * Получаем объекты с любыми продуктами.
      *
      * @param $products
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getItemsByAnyProduct($products, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsByAnyProduct($products, array $params = [])
     {
-        $builder = $this->getItemsQuery($extColumns, $with)->withAnyProducts($products, 'products.id');
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($params)
+            ->withAnyProducts($products, 'products.id');
 
         return $builder->get();
     }
