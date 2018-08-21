@@ -25,6 +25,10 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryCon
             'media' => function ($query) {
                 $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
             },
+
+            'links' => function ($linksQuery) {
+                $linksQuery->select(['id', 'product_id', 'link']);
+            },
         ];
     }
 
