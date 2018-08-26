@@ -2,6 +2,8 @@
 
 namespace InetStudio\Products\Providers;
 
+use Collective\Html\FormBuilder;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -20,6 +22,8 @@ class ProductsServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
+        $this->registerFormComponents();
+        $this->registerBladeDirectives();
     }
 
     /**
@@ -82,5 +86,33 @@ class ProductsServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.products');
+    }
+
+    /**
+     * Регистрация компонентов форм.
+     *
+     * @return void
+     */
+    protected function registerFormComponents()
+    {
+        FormBuilder::component('products', 'admin.module.products::back.forms.blocks.products', ['name' => null, 'value' => null, 'attributes' => null]);
+    }
+
+    /**
+     * Регистрация директив blade.
+     *
+     * @return void
+     */
+    protected function registerBladeDirectives()
+    {
+        Blade::directive('productLink', function ($expression) {
+            $params = explode(',', $expression, 2);
+            $params = array_map('trim', $params, array_fill(0, count($params),"' \t\n\r\0\x0B"));
+
+            return view('admin.module.products::front.partials.content.productLink_directive', [
+                'id' => $params[0],
+                'word' => $params[1],
+            ]);
+        });
     }
 }
