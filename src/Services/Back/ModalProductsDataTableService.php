@@ -52,7 +52,9 @@ class ModalProductsDataTableService extends DataTable implements ModalProductsDa
      */
     public function query()
     {
-        $query = $this->repository->getAllItems(true)->addSelect(['description']);
+        $query = $this->repository->getItemsQuery([
+            'columns' => ['description'],
+        ]);
 
         return $query;
     }

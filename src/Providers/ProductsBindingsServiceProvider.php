@@ -35,7 +35,7 @@ class ProductsBindingsServiceProvider extends ServiceProvider
         'InetStudio\Products\Contracts\Services\Back\ProductsServiceContract' => 'InetStudio\Products\Services\Back\ProductsService',
         'InetStudio\Products\Contracts\Services\Front\ProductsItemsServiceContract' => 'InetStudio\Products\Services\Front\ProductsItemsService',
         'InetStudio\Products\Contracts\Services\Front\ProductsServiceContract' => 'InetStudio\Products\Services\Front\ProductsService',
-        'InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract' => 'InetStudio\Products\Services\ProductsAnalyticsService',
+        'InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract' => 'InetStudio\Products\Services\Back\ProductsAnalyticsService',
         'InetStudio\Products\Contracts\Transformers\Back\EmbeddedProductTransformerContract' => 'InetStudio\Products\Transformers\Back\EmbeddedProductTransformer',
         'InetStudio\Products\Contracts\Transformers\Back\ModalProductTransformerContract' => 'InetStudio\Products\Transformers\Back\ModalProductTransformer',
     ];
