@@ -89,6 +89,14 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
     });
 });
 
+productsList.find('table').on('click', '.delete-product_item', function (event) {
+    event.preventDefault();
+
+    let button = $(this);
+
+    button.parents('tr').remove();
+});
+
 productItemModal.find('.save').on('click', function (event) {
     event.preventDefault();
 
