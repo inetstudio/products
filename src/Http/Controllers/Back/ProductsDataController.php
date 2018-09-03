@@ -11,7 +11,7 @@ use InetStudio\Products\Transformers\Back\BrandTransformer;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
 use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
-use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
+use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsServiceContract;
 use InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract;
 use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract;
 use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract;

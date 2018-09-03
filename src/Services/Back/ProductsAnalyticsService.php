@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
 use Illuminate\Support\Collection;
-use InetStudio\Products\Contracts\Services\ProductsAnalyticsServiceContract;
+use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsServiceContract;
 
 /**
  * Class ProductsAnalyticsService.
