@@ -102,23 +102,27 @@ class ProcessGoogleFeeds extends Command
 
                                 $this->grabImage($imageLink, $tempFile);
 
-                                $media = $productObj
-                                    ->addMedia($tempFile)
-                                    ->withCustomProperties(['source' => $imageLink])
-                                    ->toMediaCollection('preview', 'products');
+                                try {
+                                    $media = $productObj
+                                        ->addMedia($tempFile)
+                                        ->withCustomProperties(['source' => $imageLink])
+                                        ->toMediaCollection('preview', 'products');
 
-                                $media->custom_properties = [
-                                    'processed' => true,
-                                    'source' => $imageLink,
-                                ];
-                                $media->save();
+                                    $media->custom_properties = [
+                                        'processed' => true,
+                                        'source' => $imageLink,
+                                    ];
+                                    $media->save();
 
-                                event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
-                                    'object' => $productObj,
-                                    'collection' => 'preview',
-                                ]));
+                                    event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
+                                        'object' => $productObj,
+                                        'collection' => 'preview',
+                                    ]));
 
-                                $isModified = true;
+                                    $isModified = true;
+                                } catch (\Exception $error) {
+                                    $this->info(PHP_EOL.'Image error: '.$imageLink);
+                                }
                             } else {
                                 if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
                                     $productObj->clearMediaCollection('preview');
