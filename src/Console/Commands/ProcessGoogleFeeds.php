@@ -48,6 +48,7 @@ class ProcessGoogleFeeds extends Command
                 } catch (\Exception $e) {
                     $this->error('Фид недоступен: '.$url);
                 } finally {
+                    $contents = str_replace(['&nbsp;', 'nbsp'], [' ', ' '], $contents);
                     $xml = simplexml_load_string($contents);
 
                     $products = [];
