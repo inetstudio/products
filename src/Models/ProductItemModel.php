@@ -3,16 +3,16 @@
 namespace InetStudio\Products\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\Products\Contracts\Models\ProductItemModelContract;
 
 /**
  * Class ProductItemModel.
  */
-class ProductItemModel extends Model implements ProductItemModelContract, HasMediaConversions
+class ProductItemModel extends Model implements ProductItemModelContract, HasMedia
 {
     use HasImages;
     use SoftDeletes;
