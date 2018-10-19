@@ -10,9 +10,8 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.6.*",
-      "inetstudio/widgets": "1.6.*",
-      "spatie/laravel-analytics": "^3.5"
+      "inetstudio/widgets": "1.7.*",
+      "spatie/laravel-analytics": "^3.6"
     },
     "autoload": {
       "psr-4": {
