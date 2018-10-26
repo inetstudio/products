@@ -50,6 +50,18 @@ class ProductsService implements ProductsServiceContract
     }
 
     /**
+     * Получаем все объекты.
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getAllProducts(array $params = [])
+    {
+        return $this->repository->getAllItems($params);
+    }
+
+    /**
      * Возвращаем данные для виджета.
      *
      * @param Request $request
