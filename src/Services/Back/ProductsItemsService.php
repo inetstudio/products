@@ -21,7 +21,7 @@ class ProductsItemsService implements ProductsItemsServiceContract
     /**
      * @var
      */
-    private $repository;
+    public $repository;
 
     /**
      * ProductsItemsService constructor.
@@ -49,13 +49,13 @@ class ProductsItemsService implements ProductsItemsServiceContract
      * Получаем объекты по списку id.
      *
      * @param array|int $ids
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getProductsItemsByIDs($ids, bool $returnBuilder = false)
+    public function getProductsItemsByIDs($ids, array $params = [])
     {
-        return $this->repository->getItemsByIDs($ids, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $params);
     }
 
     /**
@@ -73,15 +73,19 @@ class ProductsItemsService implements ProductsItemsServiceContract
         $images = (config('products.images.conversions.product_item')) ? array_keys(config('products.images.conversions.product_item')) : [];
         $this->services['images']->attachToObject($request, $item, $images, 'products', 'product_item');
 
+        event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductItemEventContract', [
+            'object' => $item,
+        ]));
+
         return $item;
     }
 
     /**
      * Удаляем модель.
      *
-     * @param $id
+     * @param int $id
      *
-     * @return bool
+     * @return bool|null
      */
     public function destroy(int $id): ?bool
     {

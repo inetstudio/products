@@ -26,14 +26,12 @@ class ProductsItemsService implements ProductsItemsServiceContract
      * Возвращаем продукты по id.
      *
      * @param $ids
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getProductsItemsByIDs($ids, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getProductsItemsByIDs($ids, array $params = [])
     {
-        return $this->repository->getItemsByIDs($ids, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $params);
     }
 }

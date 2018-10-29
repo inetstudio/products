@@ -19,6 +19,7 @@ class ProductsBindingsServiceProvider extends ServiceProvider
     */
     public $bindings = [
         'InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract' => 'InetStudio\Products\Events\Back\ModifyProductEvent',
+        'InetStudio\Products\Contracts\Events\Back\ModifyProductItemEventContract' => 'InetStudio\Products\Events\Back\ModifyProductItemEvent',
         'InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract' => 'InetStudio\Products\Http\Controllers\Back\ProductsDataController',
         'InetStudio\Products\Contracts\Http\Controllers\Back\ProductsItemsControllerContract' => 'InetStudio\Products\Http\Controllers\Back\ProductsItemsController',
         'InetStudio\Products\Contracts\Http\Requests\Back\SaveProductItemRequestContract' => 'InetStudio\Products\Http\Requests\Back\SaveProductItemRequest',
