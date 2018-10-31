@@ -14,10 +14,13 @@ productsList.find('.save').on('click', function (event) {
             return $.trim($(this).text());
         }).get());
 
+    let style = productsList.find('select[name=style]').val();
+
     if (ids.length !== 0) {
         window.Admin.modules.widgets.saveWidget(productsListWidgetID, {
             view: 'admin.module.products::front.partials.content.products_list_widget',
             params: {
+                style: style,
                 ids: ids
             },
             additional_info : {
@@ -199,6 +202,14 @@ window.tinymce.PluginManager.add('products', function (editor) {
                 productsListWidgetID = $(content).attr('data-id');
 
                 window.Admin.modules.widgets.getWidget(productsListWidgetID, function (widget) {
+                    let style = 'checklist';
+                    if (typeof widget.params.style != 'undefined') {
+                        style = widget.params.style;
+                    }
+
+                    productsList.find('select.select2').val(style);
+                    productsList.find('select.select2').trigger('change');
+
                     let titles = widget.additional_info.titles;
 
                     widget.params.ids.forEach(function (id, index) {
@@ -216,7 +227,7 @@ window.tinymce.PluginManager.add('products', function (editor) {
 
             $('#products_list_modal').modal();
         }
-    })    
+    })
 });
 
 function addProductsToList(data) {

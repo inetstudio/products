@@ -1,9 +1,9 @@
 $(document).ready(function() {
     if ($('.products_wrapper').length > 0) {
-            var productsComponents = [];
+        let productsComponents = [];
 
         $('.products_wrapper .products-list').each(function () {
-            var wrapper = $(this).closest('.products_wrapper'),
+            let wrapper = $(this).closest('.products_wrapper'),
                 name = $(this).attr('id'),
                 items = JSON.parse($(this).attr('data-items'));
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
             wrapper.find('table').on('click', '.product-add', function (event) {
                 event.preventDefault();
 
-                var id = $(this).attr('data-product'),
+                let id = $(this).attr('data-product'),
                     title = $(this).closest('tr').children('td').eq(2).text();
 
                 if (! productsComponents[name].itemIds.includes(id)) {
@@ -85,6 +85,8 @@ $(document).ready(function() {
     $('#products_list_modal').on('hidden.bs.modal', function (e) {
         let modal = $(this);
 
+        modal.find('select.select2').val('checklist');
+        modal.find('select.select2').trigger('change');
         modal.find('.products-list tr[class!=product_item-tr-template]').remove();
     });
 });
