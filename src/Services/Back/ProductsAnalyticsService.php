@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
 use Illuminate\Support\Collection;
+use Spatie\Analytics\AnalyticsFacade;
 use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsServiceContract;
 
 /**
@@ -71,7 +72,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
      *
      * @return Period
      */
-    private function getPeriod(Request $request): Period
+    protected function getPeriod(Request $request): Period
     {
         $start = config('products.analytics_start_period');
         $start = ($request->filled('startPeriod')) ? $request->get('startPeriod') : $start;
@@ -90,7 +91,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
      *
      * @return Collection
      */
-    private function prepareData(Collection $rows): Collection
+    protected function prepareData(Collection $rows): Collection
     {
         $data = $rows->map(function ($item) {
             return [
@@ -123,7 +124,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
      *
      * @return Collection
      */
-    private function analyticsQuery(Period $period, string $metrics, array $other): Collection
+    protected function analyticsQuery(Period $period, string $metrics, array $other): Collection
     {
         $rows = [];
 
@@ -137,7 +138,7 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
         ], $other);
 
         while (! $stop) {
-            $analyticsData = \Analytics::performQuery(
+            $analyticsData = AnalyticsFacade::performQuery(
                 $period,
                 $metrics,
                 $requestData
