@@ -4,6 +4,7 @@ namespace InetStudio\Products\Repositories;
 
 use InetStudio\AdminPanel\Repositories\BaseRepository;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
+use InetStudio\Favorites\Repositories\Traits\FavoritesRepositoryTrait;
 use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
 
 /**
@@ -11,6 +12,13 @@ use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
  */
 class ProductsRepository extends BaseRepository implements ProductsRepositoryContract
 {
+    use FavoritesRepositoryTrait;
+
+    /**
+     * @var string
+     */
+    protected $favoritesType = 'product';
+
     /**
      * ProductsRepository constructor.
      *
@@ -30,23 +38,5 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryCon
                 $linksQuery->select(['id', 'product_id', 'link']);
             },
         ];
-    }
-
-    /**
-     * Получаем сохраненные объекты пользователя.
-     *
-     * @param mixed $userID
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getItemsFavoritedByUser($userID, array $params = [])
-    {
-        $builder = $this->getItemsQuery($params)
-            ->whereFavoritedBy('product', $userID);
-
-        $items = $builder->get();
-
-        return $items;
     }
 }
