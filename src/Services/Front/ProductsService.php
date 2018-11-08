@@ -37,6 +37,19 @@ class ProductsService implements ProductsServiceContract
     }
 
     /**
+     * Получаем объекты по списку id.
+     *
+     * @param array|int $ids
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getProductsByIDs($ids, array $params = [])
+    {
+        return $this->repository->getItemsByIDs($ids, $params);
+    }
+
+    /**
      * Получаем сохраненные объекты пользователя.
      *
      * @param mixed $userID
@@ -47,6 +60,18 @@ class ProductsService implements ProductsServiceContract
     public function getProductsFavoritedByUser($userID, array $params = [])
     {
         return $this->repository->getItemsFavoritedByUser($userID, $params);
+    }
+
+    /**
+     * Получаем все объекты.
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getAllProducts(array $params = [])
+    {
+        return $this->repository->getAllItems($params);
     }
 
     /**
