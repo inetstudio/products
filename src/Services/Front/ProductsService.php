@@ -37,6 +37,19 @@ class ProductsService implements ProductsServiceContract
     }
 
     /**
+     * Получаем объекты по списку id.
+     *
+     * @param array|int $ids
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getProductsByIDs($ids, array $params = [])
+    {
+        return $this->repository->getItemsByIDs($ids, $params);
+    }
+
+    /**
      * Получаем сохраненные объекты пользователя.
      *
      * @param mixed $userID
