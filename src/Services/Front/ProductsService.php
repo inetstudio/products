@@ -2,9 +2,8 @@
 
 namespace InetStudio\Products\Services\Front;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use InetStudio\AdminPanel\Services\Front\BaseService;
-use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
 use InetStudio\Products\Contracts\Services\Front\ProductsServiceContract;
 
@@ -24,19 +23,16 @@ class ProductsService extends BaseService implements ProductsServiceContract
     }
 
     /**
-     * Возвращаем данные для виджета.
+     * Возвращаем объекты, привязанные к материалам.
      *
-     * @param Request $request
-     * @param ProductModelContract $item
+     * @param Collection $materials
      *
-     * @return array
+     * @return Collection
      */
-    public function getWidgetData(Request $request, ProductModelContract $item): array
+    public function getItemsByMaterials(Collection $materials): Collection
     {
-        $data = [
-            'product' => $item,
-        ];
-
-        return $data;
+        return $materials->map(function ($item) {
+            return (isset($item['products'])) ? $item['products'] : [];
+        })->filter()->collapse()->unique('id');
     }
 }
