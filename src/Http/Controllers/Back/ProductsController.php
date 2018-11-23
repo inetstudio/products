@@ -2,70 +2,125 @@
 
 namespace InetStudio\Products\Http\Controllers\Back;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use InetStudio\Products\Models\ProductModel;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
+use InetStudio\Products\Contracts\Http\Requests\Back\SaveProductRequestContract;
+use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsControllerContract;
+use InetStudio\Products\Contracts\Http\Responses\Back\Products\FormResponseContract;
+use InetStudio\Products\Contracts\Http\Responses\Back\Products\SaveResponseContract;
+use InetStudio\Products\Contracts\Http\Responses\Back\Products\ShowResponseContract;
+use InetStudio\Products\Contracts\Http\Responses\Back\Products\IndexResponseContract;
+use InetStudio\Products\Contracts\Http\Responses\Back\Products\DestroyResponseContract;
 
 /**
  * Class ProductsController.
  */
-class ProductsController extends Controller
+class ProductsController extends Controller implements ProductsControllerContract
 {
-    use DatatablesTrait;
+    /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    public $services;
 
     /**
-     * Список продуктов.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
-     * @throws \Exception
+     * ProductsController constructor.
      */
-    public function index(): View
+    public function __construct()
     {
-        $table = $this->generateTable('products', 'index');
-
-        return view('admin.module.products::back.pages.index', compact('table'));
+        $this->services['products'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract');
+        $this->services['dataTables'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsDataTableServiceContract');
     }
 
     /**
-     * Редактирование продукта.
+     * Список объектов.
      *
-     * @param null $id
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return IndexResponseContract
      */
-    public function edit($id = null): View
+    public function index(): IndexResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
-            return view('admin.module.products::back.pages.form', [
-                'item' => $item,
-            ]);
-        } else {
-            abort(404);
-        }
+        $table = $this->services['dataTables']->html();
+
+        return app()->makeWith(IndexResponseContract::class, [
+            'data' => compact('table'),
+        ]);
     }
 
     /**
-     * Удаление продукта.
+     * Получение объекта.
      *
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return ShowResponseContract
      */
-    public function destroy($id = null): JsonResponse
+    public function show(int $id = 0): ShowResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = ProductModel::find($id)) {
-            $item->delete();
+        $item = $this->services['products']->getProductById($id);
 
-            return response()->json([
-                'success' => true,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-            ]);
-        }
+        return app()->makeWith(ShowResponseContract::class, [
+            'item' => $item,
+        ]);
+    }
+
+    /**
+     * Редактирование объекта.
+     *
+     * @param int $id
+     *
+     * @return FormResponseContract
+     */
+    public function edit(int $id = 0): FormResponseContract
+    {
+        $item = $this->services['products']->getItemById($id);
+
+        return app()->makeWith(FormResponseContract::class, [
+            'data' => compact('item'),
+        ]);
+    }
+
+    /**
+     * Обновление объекта.
+     *
+     * @param SaveProductRequestContract $request
+     * @param int $id
+     *
+     * @return SaveResponseContract
+     */
+    public function update(SaveProductRequestContract $request, int $id = 0): SaveResponseContract
+    {
+        return $this->save($request, $id);
+    }
+
+    /**
+     * Сохранение объекта.
+     *
+     * @param SaveProductRequestContract $request
+     * @param int $id
+     *
+     * @return SaveResponseContract
+     */
+    private function save(SaveProductRequestContract $request, int $id = 0): SaveResponseContract
+    {
+        $item = $this->services['products']->save($request, $id);
+
+        return app()->makeWith(SaveResponseContract::class, [
+            'item' => $item,
+        ]);
+    }
+
+    /**
+     * Удаление объекта.
+     *
+     * @param int $id
+     *
+     * @return DestroyResponseContract
+     */
+    public function destroy(int $id = 0): DestroyResponseContract
+    {
+        $result = $this->services['products']->destroy($id);
+
+        return app()->makeWith(DestroyResponseContract::class, [
+            'result' => (!! $result),
+        ]);
     }
 }

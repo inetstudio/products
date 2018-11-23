@@ -61,6 +61,10 @@ class ProcessGoogleFeeds extends Command
 
                         $product = $item->children('g', true);
 
+                        if (! $this->checkToUpdate($feedHash, trim($product->id))) {
+                            continue;
+                        }
+
                         $products[] = trim($product->id);
 
                         $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
@@ -238,6 +242,21 @@ class ProcessGoogleFeeds extends Command
                 'object' => $product,
             ]));
         }
+    }
+
+    /**
+     * Проверяем обновлять ли продукт.
+     *
+     * @param $feedHash
+     * @param $productId
+     *
+     * @return bool
+     */
+    protected function checkToUpdate($feedHash, $productId): bool
+    {
+        $product = ProductModel::withTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($productId))->first();
+
+        return (! $product || $product->update == 1);
     }
 
     /**

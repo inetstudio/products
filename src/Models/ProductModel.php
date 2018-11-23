@@ -40,7 +40,7 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
      */
     protected $fillable = [
         'feed_hash', 'g_id', 'title', 'description', 'price', 'condition',
-        'availability', 'brand', 'product_type',
+        'availability', 'brand', 'product_type', 'update',
     ];
 
     /**

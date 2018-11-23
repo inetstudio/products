@@ -56,6 +56,10 @@ class ProcessYandexFeeds extends Command
                         $isModified = false;
                         $isNew = false;
 
+                        if (! $this->checkToUpdate($feedHash, trim($product->vendorCode))) {
+                            continue;
+                        }
+
                         $products[] = trim($product->vendorCode);
 
                         $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
@@ -220,6 +224,21 @@ class ProcessYandexFeeds extends Command
                 'object' => $product,
             ]));
         }
+    }
+
+    /**
+     * Проверяем обновлять ли продукт.
+     *
+     * @param $feedHash
+     * @param $productId
+     *
+     * @return bool
+     */
+    protected function checkToUpdate($feedHash, $productId): bool
+    {
+        $product = ProductModel::withTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($productId))->first();
+
+        return (! $product || $product->update == 1);
     }
 
     /**

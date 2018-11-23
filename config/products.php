@@ -10,15 +10,8 @@ return [
 
     'datatables' => [
         'ajax' => [
-            'index' => [
-                'url' => 'back.products.data',
-                'type' => 'POST',
-                'data' => 'function(data) { 
-                    data._token = $(\'meta[name="csrf-token"]\').attr(\'content\');  
-                }',
-            ],
             'embedded' => [
-                'url' => 'back.products.data',
+                'url' => 'back.products.data.index',
                 'url_params' => [
                     'type' => 'embedded',
                 ],
@@ -60,13 +53,6 @@ return [
             ],
         ],
         'columns' => [
-            'index' => [
-                ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
-                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
-                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-            ],
             'embedded' => [
                 ['data' => 'id', 'name' => 'id', 'title' => 'ID', 'orderable' => false, 'searchable' => false, 'visible' => false],
                 ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],

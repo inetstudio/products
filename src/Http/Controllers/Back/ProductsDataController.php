@@ -10,8 +10,8 @@ use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Transformers\Back\BrandTransformer;
 use InetStudio\Products\Transformers\Back\ProductTransformer;
 use InetStudio\Products\Transformers\Back\ProductableTransformer;
-use InetStudio\Products\Transformers\Back\ProductEmbeddedTransformer;
 use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsServiceContract;
+use InetStudio\Products\Contracts\Services\Back\ProductsDataTableServiceContract;
 use InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract;
 use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsDataControllerContract;
 use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract;
@@ -22,24 +22,15 @@ use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableService
 class ProductsDataController extends Controller implements ProductsDataControllerContract
 {
     /**
-     * DataTables ServerSide.
+     * Получаем данные для отображения во встроенной таблице.
      *
-     * @param $type
+     * @param ProductsDataTableServiceContract $dataTableService
      *
      * @return mixed
-     *
-     * @throws \Exception
      */
-    public function data($type = '')
+    public function data(ProductsDataTableServiceContract $dataTableService)
     {
-        $items = ProductModel::query();
-
-        $transformer = (! $type) ? new ProductTransformer : new ProductEmbeddedTransformer;
-
-        return DataTables::of($items)
-            ->setTransformer($transformer)
-            ->rawColumns(['preview', 'actions'])
-            ->make();
+        return $dataTableService->ajax();
     }
 
     /**

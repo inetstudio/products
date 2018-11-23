@@ -18,6 +18,7 @@ class CreateProductsTables extends Migration
             $table->string('availability')->default('');
             $table->string('brand')->default('');
             $table->string('product_type')->default('');
+            $table->boolean('update')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
