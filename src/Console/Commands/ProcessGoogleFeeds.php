@@ -61,7 +61,10 @@ class ProcessGoogleFeeds extends Command
 
                         $product = $item->children('g', true);
 
-                        if (! $this->checkToUpdate($feedHash, trim($product->id))) {
+                        $savedProduct = $this->getProduct($feedHash, trim($product->id));
+                        if ($savedProduct && $savedProduct->update == 0) {
+                            $products[] = $savedProduct->g_id;
+
                             continue;
                         }
 
@@ -245,18 +248,18 @@ class ProcessGoogleFeeds extends Command
     }
 
     /**
-     * Проверяем обновлять ли продукт.
+     * Получаем продукт.
      *
      * @param $feedHash
      * @param $productId
      *
-     * @return bool
+     * @return mixed
      */
-    protected function checkToUpdate($feedHash, $productId): bool
+    protected function getProduct($feedHash, $productId)
     {
         $product = ProductModel::withTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($productId))->first();
 
-        return (! $product || $product->update == 1);
+        return $product;
     }
 
     /**

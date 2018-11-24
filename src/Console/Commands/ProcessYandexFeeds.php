@@ -56,7 +56,10 @@ class ProcessYandexFeeds extends Command
                         $isModified = false;
                         $isNew = false;
 
-                        if (! $this->checkToUpdate($feedHash, trim($product->vendorCode))) {
+                        $savedProduct = $this->getProduct($feedHash, trim($product->vendorCode));
+                        if ($savedProduct && $savedProduct->update == 0) {
+                            $products[] = $savedProduct->g_id;
+
                             continue;
                         }
 
@@ -227,18 +230,18 @@ class ProcessYandexFeeds extends Command
     }
 
     /**
-     * Проверяем обновлять ли продукт.
+     * Получаем продукт.
      *
      * @param $feedHash
      * @param $productId
      *
-     * @return bool
+     * @return mixed
      */
-    protected function checkToUpdate($feedHash, $productId): bool
+    protected function getProduct($feedHash, $productId)
     {
         $product = ProductModel::withTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($productId))->first();
 
-        return (! $product || $product->update == 1);
+        return $product;
     }
 
     /**
