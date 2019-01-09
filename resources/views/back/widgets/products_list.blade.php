@@ -47,7 +47,7 @@
                                                     <span></span>
                                                 </td>
                                                 <td width="10%">
-                                                    <a href="#" class="btn btn-xs btn-default edit-product_item m-r-xs"><i class="fa fa-pencil"></i></a>
+                                                    <a href="#" class="btn btn-xs btn-default edit-product_item m-r-xs"><i class="fa fa-pencil-alt"></i></a>
                                                     <a href="#" class="btn btn-xs btn-danger delete-product_item"><i class="fa fa-times"></i></a>
                                                 </td>
                                                 <input name="product_item[]'" type="hidden" value="">
