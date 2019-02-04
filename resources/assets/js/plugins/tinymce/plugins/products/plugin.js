@@ -180,6 +180,28 @@ window.tinymce.PluginManager.add('products', function (editor) {
         }
     });
 
+    editor.addButton('add_product_button', {
+        title: 'Продуктовая кнопка',
+        image: '/admin/images/tinymce-button-products-add-button.png',
+        onclick: function () {
+            editor.focus();
+
+            $('#choose_product_modal').off('click');
+            $('#choose_product_modal').on('click', '.product-add', function (event) {
+                event.preventDefault();
+
+                let id = $(this).attr('data-product'),
+                    product = $(this).attr('data-title');
+
+                editor.execCommand('mceInsertContent', false, '@productButton(\'' + id + '\', \'' + product + '\')');
+
+                $('#choose_product_modal').modal('hide');
+            });
+
+            $('#choose_product_modal').modal();
+        }
+    });
+
     editor.addButton('add_products_list', {
         title: 'Продуктовая подборка',
         icon: 'template',

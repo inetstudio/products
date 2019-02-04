@@ -114,5 +114,13 @@ class ProductsServiceProvider extends ServiceProvider
                 'word' => $params[1],
             ]);
         });
+
+        Blade::directive('productButton', function ($expression) {
+            $params = explode(',', $expression, 2);
+
+            return view('admin.module.products::front.partials.content.productButton_directive', [
+                'id' => $params[0],
+            ]);
+        });
     }
 }
