@@ -2,22 +2,23 @@
 
 namespace InetStudio\Products\Models;
 
+use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
-use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 
-class ProductModel extends Model implements ProductModelContract, HasMedia, FavoritableContract
+class ProductModel extends Model implements ProductModelContract, HasMedia, FavoritableContract, Auditable
 {
     use HasImages;
     use Searchable;
     use SoftDeletes;
-    use RevisionableTrait;
+    use \OwenIt\Auditing\Auditable;
     use HasSimpleCountersTrait;
     use \InetStudio\Favorites\Models\Traits\Favoritable;
 
@@ -54,7 +55,12 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
         'deleted_at',
     ];
 
-    protected $revisionCreationsEnabled = true;
+    /**
+     * Should the timestamps be audited?
+     *
+     * @var bool
+     */
+    protected $auditTimestamps = true;
 
     /**
      * Отношение "один ко многим" с моделью ссылок.
@@ -83,7 +89,7 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
      */
     public function toSearchableArray()
     {
-        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'price', 'condition', 'availability', 'brand', 'product_type']);
+        $arr = Arr::only($this->toArray(), ['id', 'title', 'description', 'price', 'condition', 'availability', 'brand', 'product_type']);
 
         return $arr;
     }

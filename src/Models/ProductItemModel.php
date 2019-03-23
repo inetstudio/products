@@ -3,20 +3,20 @@
 namespace InetStudio\Products\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
-use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Products\Contracts\Models\ProductItemModelContract;
 
 /**
  * Class ProductItemModel.
  */
-class ProductItemModel extends Model implements ProductItemModelContract, HasMedia
+class ProductItemModel extends Model implements ProductItemModelContract, HasMedia, Auditable
 {
     use HasImages;
     use SoftDeletes;
-    use RevisionableTrait;
+    use \OwenIt\Auditing\Auditable;
 
     protected $images = [
         'config' => 'products',
@@ -50,7 +50,12 @@ class ProductItemModel extends Model implements ProductItemModelContract, HasMed
         'deleted_at',
     ];
 
-    protected $revisionCreationsEnabled = true;
+    /**
+     * Should the timestamps be audited?
+     *
+     * @var bool
+     */
+    protected $auditTimestamps = true;
 
     /**
      * Сеттер атрибута title.
