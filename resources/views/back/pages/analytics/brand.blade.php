@@ -19,7 +19,7 @@
                     <div class="ibox-content">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>Привязанные товары <span class="label label-primary pull-right">{{ $linkedCount }}</span></h5>
+                                <h5>Привязанные товары <span class="label label-primary float-right">{{ $linkedCount }}</span></h5>
                             </div>
                             <div class="ibox-content">
                                 <div class="table-responsive">
@@ -29,7 +29,7 @@
                         </div>
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>Непривязанные товары <span class="label label-warning pull-right">{{ $unlinkedCount }}</span></h5>
+                                <h5>Непривязанные товары <span class="label label-warning float-right">{{ $unlinkedCount }}</span></h5>
                             </div>
                             <div class="ibox-content">
                                 <div class="table-responsive">

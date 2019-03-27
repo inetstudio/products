@@ -45,7 +45,7 @@ productsList.find('.add_product_item').on('click', function (event) {
 productsList.find('table').on('click', '.edit-product_item', function (event) {
     event.preventDefault();
 
-    $('#products_list_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+    $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
     let productItemID = $(this).parents('tr').find('input').first().val();
 
@@ -75,13 +75,13 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
 
                 Admin.containers.images['modal_product_item_content'].images = data.content_images;
 
-                $('#products_list_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+                $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
                 $('#product_item_modal').modal();
             }
         },
         error: function () {
-            $('#products_list_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+            $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
             swal({
                 title: "Ошибка",
@@ -109,9 +109,9 @@ productItemModal.find('.save').on('click', function (event) {
     data.content.text = window.tinymce.get('modal_product_item_content').getContent();
 
     productItemModal.find('.form-group').removeClass('has-error');
-    productItemModal.find('span.help-block').remove();
+    productItemModal.find('span.form-text').remove();
 
-    $('#product_item_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+    $('#product_item_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
     $.ajax({
         'url': form.attr('action'),
@@ -128,7 +128,7 @@ productItemModal.find('.save').on('click', function (event) {
                     addProductsToList(data);
                 }
 
-                $('#product_item_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+                $('#product_item_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
                 $('#product_item_modal').modal('hide');
             }
@@ -144,14 +144,14 @@ productItemModal.find('.save').on('click', function (event) {
                     let errorMessages = data.responseJSON.errors[field];
 
                     errorMessages.forEach(function (errorMessage) {
-                        let errorElement = $('<span class="help-block m-b-none">'+errorMessage+'</span>');
+                        let errorElement = $('<span class="form-text m-b-none">'+errorMessage+'</span>');
 
                         errorElement.insertAfter(input);
                     })
                 }
             }
 
-            $('#product_item_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+            $('#product_item_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
         }
     });
 });
@@ -219,7 +219,7 @@ window.tinymce.PluginManager.add('products', function (editor) {
 
                 return false;
             } else if (content !== '') {
-                $('#products_list_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+                $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
                 productsListWidgetID = $(content).attr('data-id');
 
@@ -241,7 +241,7 @@ window.tinymce.PluginManager.add('products', function (editor) {
                         });
                     })
 
-                    $('#products_list_modal').find('.form-horizontal.ibox-content').toggleClass('sk-loading');
+                    $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
                 });
             } else {
                 productsListWidgetID = '';

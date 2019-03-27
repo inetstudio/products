@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="ibox-content form-horizontal">
+                    <div class="ibox-content">
                         <div class="row">
 
                             {{ $modalProductsTable->table(['class' => 'table table-striped table-bordered table-hover dataTable']) }}
