@@ -96,9 +96,6 @@
                             'label' => [
                                 'title' => 'Заголовок',
                             ],
-                            'field' => [
-                                'class' => 'form-control',
-                            ],
                         ]) !!}
 
                         @php
