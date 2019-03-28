@@ -33,11 +33,17 @@
             <div class="m-b-md">
                 <ul class="products-package products-list m-t small-list" id="{{ $name }}_list" data-items="{{ $items }}">
                     <li v-for="(item, index) in items">
-                        <span class="m-l-xs">@{{ itemTitles[index] }}</span>
-                        <div class="btn-group float-right">
-                            <a href="#" class="btn btn-xs btn-danger delete" @click.prevent="remove(index)"><i class="fa fa-times"></i></a>
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="m-l-xs">@{{ itemTitles[index] }}</span>
+                            </div>
+                            <div class="col-2">
+                                <div class="btn-group float-right">
+                                    <a href="#" class="btn btn-xs btn-danger delete" @click.prevent="remove(index)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <input :name="'{{ $name }}[' + index + '][id]'" type="hidden" :value="item.id">
+                            </div>
                         </div>
-                        <input :name="'{{ $name }}[' + index + '][id]'" type="hidden" :value="item.id">
                     </li>
                 </ul>
             </div>
