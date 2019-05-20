@@ -15,6 +15,11 @@ class ProductsService extends BaseService implements ProductsServiceContract
     use FavoritesServiceTrait;
 
     /**
+     * @var string
+     */
+    protected $favoritesType = 'product';
+
+    /**
      * ProductsService constructor.
      */
     public function __construct()
