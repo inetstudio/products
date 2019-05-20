@@ -23,7 +23,7 @@
         <div class="panel-body">
 
             @if (isset($attributes['item']) && method_exists($attributes['item'], 'getCustomField'))
-                {!! Form::string('custom[ecom_header]', $attributes['item']->getCustomField('ecom_header'), [
+                {!! Form::string('custom_fields[ecom_header]', $attributes['item']->getCustomField('ecom_header'), [
                      'label' => [
                          'title' => 'Заголовок',
                      ],
