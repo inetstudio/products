@@ -12,6 +12,7 @@ use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
+use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 
 class ProductModel extends Model implements ProductModelContract, HasMedia, FavoritableContract, Auditable
 {
@@ -21,6 +22,7 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
     use \OwenIt\Auditing\Auditable;
     use HasSimpleCountersTrait;
     use \InetStudio\Favorites\Models\Traits\Favoritable;
+    use BuildQueryScopeTrait;
 
     protected $images = [
         'config' => 'products',
@@ -61,6 +63,28 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
      * @var bool
      */
     protected $auditTimestamps = true;
+
+    /**
+     * Загрузка модели.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::$buildQueryScopeDefaults['columns'] = [
+            'id', 'title', 'brand',
+        ];
+
+        self::$buildQueryScopeDefaults['relations'] = [
+            'media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            },
+
+            'links' => function ($linksQuery) {
+                $linksQuery->select(['id', 'product_id', 'link']);
+            },
+        ];
+    }
 
     /**
      * Отношение "один ко многим" с моделью ссылок.

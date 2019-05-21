@@ -14,6 +14,8 @@ class ProductsService extends BaseService implements ProductsServiceContract
 {
     use FavoritesServiceTrait;
 
+    public $model;
+
     /**
      * @var string
      */
@@ -25,6 +27,7 @@ class ProductsService extends BaseService implements ProductsServiceContract
     public function __construct()
     {
         parent::__construct(app()->make('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract'));
+        $this->model = app()->make('InetStudio\Products\Contracts\Models\ProductModelContract');
     }
 
     /**
