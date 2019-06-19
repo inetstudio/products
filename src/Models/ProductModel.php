@@ -10,9 +10,9 @@ use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
-use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
+use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
 
 class ProductModel extends Model implements ProductModelContract, HasMedia, FavoritableContract, Auditable
 {
