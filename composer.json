@@ -10,6 +10,7 @@
       }
     ],
     "require": {
+      "inetstudio/simple-counters": "1.8.*",
       "inetstudio/widgets": "1.8.*",
       "spatie/laravel-analytics": "^3.7"
     },

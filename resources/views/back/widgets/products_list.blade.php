@@ -24,7 +24,7 @@
                                             'title' => 'Оформление',
                                         ],
                                         'field' => [
-                                            'class' => 'select2 form-control',
+                                            'class' => 'select2-drop form-control',
                                             'data-placeholder' => 'Выберите оформление',
                                             'style' => 'width: 100%',
                                         ],
