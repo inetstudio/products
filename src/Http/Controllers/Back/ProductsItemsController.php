@@ -2,7 +2,7 @@
 
 namespace InetStudio\Products\Http\Controllers\Back;
 
-use App\Http\Controllers\Controller;
+use InetStudio\AdminPanel\Base\Http\Controllers\Controller;
 use InetStudio\Products\Contracts\Http\Requests\Back\SaveProductItemRequestContract;
 use InetStudio\Products\Contracts\Http\Controllers\Back\ProductsItemsControllerContract;
 use InetStudio\Products\Contracts\Http\Responses\Back\ProductsItems\SaveResponseContract;

@@ -4,7 +4,7 @@ namespace InetStudio\Products\Http\Controllers\Back;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
+use InetStudio\AdminPanel\Base\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Transformers\Back\BrandTransformer;

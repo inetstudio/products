@@ -3,7 +3,7 @@
 namespace InetStudio\Products\Http\Controllers\Back;
 
 use Illuminate\View\View;
-use App\Http\Controllers\Controller;
+use InetStudio\AdminPanel\Base\Http\Controllers\Controller;
 use InetStudio\Products\Models\ProductModel;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
