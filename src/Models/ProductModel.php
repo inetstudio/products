@@ -4,12 +4,14 @@ namespace InetStudio\Products\Models;
 
 use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
@@ -116,5 +118,70 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Favo
         $arr = Arr::only($this->toArray(), ['id', 'title', 'description', 'price', 'condition', 'availability', 'brand', 'product_type']);
 
         return $arr;
+    }
+
+    /**
+     * Handle dynamic method calls into the model.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     *
+     * @return mixed
+     *
+     * @throws BindingResolutionException
+     */
+    public function __call($method, $parameters) {
+        $config = implode( '.', ['products.relationships', $method]);
+
+        if (Config::has($config)) {
+            $data = Config::get($config);
+
+            $model = isset($data['model']) ? [app()->make($data['model'])] : [];
+            $params = $data['params'] ?? [];
+
+            return call_user_func_array([$this, $data['relationship']], array_merge($model, $params));
+        }
+
+        return parent::__call($method, $parameters);
+    }
+
+    /**
+     * Get an attribute from the model.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getAttribute($key)
+    {
+        $config = implode( '.', ['products.relationships', $key]);
+
+        if (Config::has($config)) {
+            return $this->getRelationValue($key);
+        }
+
+        return parent::getAttribute($key);
+    }
+
+    /**
+     * Get a relationship.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getRelationValue($key)
+    {
+        if ($this->relationLoaded($key)) {
+            return $this->relations[$key];
+        }
+
+        $config = implode( '.', ['products.relationships', $key]);
+
+        if (Config::has($config)) {
+            return $this->getRelationshipFromMethod($key);
+        }
+
+        return parent::getRelationValue($key);
     }
 }
