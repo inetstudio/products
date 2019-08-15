@@ -31,6 +31,16 @@ class ProductsService extends BaseService implements ProductsServiceContract
     }
 
     /**
+     * Возвращаем модель.
+     *
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * Возвращаем объекты, привязанные к материалам.
      *
      * @param Collection $materials
