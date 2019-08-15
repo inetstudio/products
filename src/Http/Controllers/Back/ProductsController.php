@@ -28,7 +28,7 @@ class ProductsController extends Controller implements ProductsControllerContrac
      */
     public function __construct()
     {
-        $this->services['products'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract');
+        $this->services['products'] = app()->make('InetStudio\Products\Contracts\Services\Back\ItemsServiceContract');
         $this->services['dataTables'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsDataTableServiceContract');
     }
 

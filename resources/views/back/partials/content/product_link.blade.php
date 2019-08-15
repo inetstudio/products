@@ -1,4 +1,4 @@
-@inject('productsService', 'InetStudio\Products\Contracts\Services\Front\ProductsServiceContract')
+@inject('productsService', 'InetStudio\Products\Contracts\Services\Front\ItemsServiceContract')
 
 @php
     $product = $productsService->getProduct($id);
