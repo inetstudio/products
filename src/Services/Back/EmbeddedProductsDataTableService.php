@@ -5,7 +5,7 @@ namespace InetStudio\Products\Services\Back;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Services\DataTable;
-use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
+use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableServiceContract;
 
 /**
@@ -14,18 +14,18 @@ use InetStudio\Products\Contracts\Services\Back\EmbeddedProductsDataTableService
 class EmbeddedProductsDataTableService extends DataTable implements EmbeddedProductsDataTableServiceContract
 {
     /**
-     * @var ProductsRepositoryContract
+     * @var ProductModelContract
      */
-    private $repository;
+    protected $model;
 
     /**
      * EmbeddedProductsDataTableService constructor.
      *
-     * @param ProductsRepositoryContract $repository
+     * @param  ProductModelContract  $model
      */
-    public function __construct(ProductsRepositoryContract $repository)
+    public function __construct(ProductModelContract $model)
     {
-        $this->repository = $repository;
+        $this->model = $model;
     }
 
     /**
@@ -52,7 +52,7 @@ class EmbeddedProductsDataTableService extends DataTable implements EmbeddedProd
      */
     public function query()
     {
-        $query = $this->repository->getItemsQuery([
+        $query = $this->model->buildQuery([
             'columns' => ['description'],
         ]);
 

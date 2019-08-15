@@ -55,7 +55,7 @@ class ProductsController extends Controller implements ProductsControllerContrac
      */
     public function show(int $id = 0): ShowResponseContract
     {
-        $item = $this->services['products']->getProductById($id);
+        $item = $this->services['products']->getItemById($id);
 
         return app()->makeWith(ShowResponseContract::class, [
             'item' => $item,
@@ -101,7 +101,9 @@ class ProductsController extends Controller implements ProductsControllerContrac
      */
     private function save(SaveProductRequestContract $request, int $id = 0): SaveResponseContract
     {
-        $item = $this->services['products']->save($request, $id);
+        $data = $request->all();
+
+        $item = $this->services['products']->save($data, $id);
 
         return app()->makeWith(SaveResponseContract::class, [
             'item' => $item,

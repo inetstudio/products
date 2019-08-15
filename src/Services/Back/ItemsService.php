@@ -2,37 +2,41 @@
 
 namespace InetStudio\Products\Services\Back;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
-use InetStudio\AdminPanel\Services\Back\BaseService;
+use InetStudio\AdminPanel\Base\Services\BaseService;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
-use InetStudio\Products\Contracts\Services\Back\ProductsServiceContract;
-use InetStudio\Products\Contracts\Http\Requests\Back\SaveProductRequestContract;
+use InetStudio\Products\Contracts\Services\Back\ItemsServiceContract;
 
 /**
- * Class ProductsService.
+ * Class ItemsService.
  */
-class ProductsService extends BaseService implements ProductsServiceContract
+class ItemsService extends BaseService implements ItemsServiceContract
 {
     /**
-     * ProductsService constructor.
+     * ItemsService constructor.
+     *
+     * @param  ProductModelContract  $model
      */
-    public function __construct()
+    public function __construct(ProductModelContract $model)
     {
-        parent::__construct(app()->make('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract'));
+        parent::__construct($model);
     }
 
     /**
      * Сохраняем модель.
      *
-     * @param SaveProductRequestContract $request
+     * @param array $data
      * @param int $id
      *
      * @return ProductModelContract
      */
-    public function save(SaveProductRequestContract $request, int $id): ProductModelContract
+    public function save(array $data, int $id): ProductModelContract
     {
         $action = ($id) ? 'отредактирован' : 'создан';
-        $item = $this->repository->save($request->only($this->repository->getModel()->getFillable()), $id);
+
+        $itemData = Arr::only($data, $this->model->getFillable());
+        $item = $this->saveModel($itemData, $id);
 
         event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
             'object' => $item,

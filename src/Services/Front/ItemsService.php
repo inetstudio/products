@@ -3,18 +3,17 @@
 namespace InetStudio\Products\Services\Front;
 
 use Illuminate\Support\Collection;
-use InetStudio\AdminPanel\Services\Front\BaseService;
+use InetStudio\AdminPanel\Base\Services\BaseService;
+use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
-use InetStudio\Products\Contracts\Services\Front\ProductsServiceContract;
+use InetStudio\Products\Contracts\Services\Front\ItemsServiceContract;
 
 /**
- * Class ProductsService.
+ * Class ItemsService.
  */
-class ProductsService extends BaseService implements ProductsServiceContract
+class ItemsService extends BaseService implements ItemsServiceContract
 {
     use FavoritesServiceTrait;
-
-    public $model;
 
     /**
      * @var string
@@ -23,21 +22,12 @@ class ProductsService extends BaseService implements ProductsServiceContract
 
     /**
      * ProductsService constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(app()->make('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract'));
-        $this->model = app()->make('InetStudio\Products\Contracts\Models\ProductModelContract');
-    }
-
-    /**
-     * Возвращаем модель.
      *
-     * @return mixed
+     * @param  ProductModelContract  $model
      */
-    public function getModel()
+    public function __construct(ProductModelContract $model)
     {
-        return $this->model;
+        parent::__construct($model);
     }
 
     /**

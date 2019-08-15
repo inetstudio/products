@@ -5,6 +5,7 @@ namespace InetStudio\Products\Services\Back;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Services\DataTable;
+use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Products\Contracts\Services\Back\ProductsDataTableServiceContract;
 
 /**
@@ -13,16 +14,18 @@ use InetStudio\Products\Contracts\Services\Back\ProductsDataTableServiceContract
 class ProductsDataTableService extends DataTable implements ProductsDataTableServiceContract
 {
     /**
-     * @var
+     * @var ProductModelContract
      */
-    public $repository;
+    protected $model;
 
     /**
      * ProductsDataTableService constructor.
+     *
+     * @param  ProductModelContract  $model
      */
-    public function __construct()
+    public function __construct(ProductModelContract $model)
     {
-        $this->repository = app()->make('InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract');
+        $this->model = $model;
     }
 
     /**
@@ -49,7 +52,7 @@ class ProductsDataTableService extends DataTable implements ProductsDataTableSer
      */
     public function query()
     {
-        $query = $this->repository->getItemsQuery([
+        $query = $this->model->buildQuery([
             'columns' => ['created_at', 'updated_at'],
             'relations' => ['media'],
         ]);

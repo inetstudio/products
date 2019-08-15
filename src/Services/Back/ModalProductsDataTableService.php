@@ -5,7 +5,7 @@ namespace InetStudio\Products\Services\Back;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Services\DataTable;
-use InetStudio\Products\Contracts\Repositories\ProductsRepositoryContract;
+use InetStudio\Products\Contracts\Models\ProductModelContract;
 use InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceContract;
 
 /**
@@ -14,18 +14,18 @@ use InetStudio\Products\Contracts\Services\Back\ModalProductsDataTableServiceCon
 class ModalProductsDataTableService extends DataTable implements ModalProductsDataTableServiceContract
 {
     /**
-     * @var ProductsRepositoryContract
+     * @var ProductModelContract
      */
-    private $repository;
+    protected $model;
 
     /**
-     * EmbeddedProductsDataTableService constructor.
+     * ModalProductsDataTableService constructor.
      *
-     * @param ProductsRepositoryContract $repository
+     * @param  ProductModelContract  $model
      */
-    public function __construct(ProductsRepositoryContract $repository)
+    public function __construct(ProductModelContract $model)
     {
-        $this->repository = $repository;
+        $this->model = $model;
     }
 
     /**
@@ -52,7 +52,7 @@ class ModalProductsDataTableService extends DataTable implements ModalProductsDa
      */
     public function query()
     {
-        $query = $this->repository->getItemsQuery([
+        $query = $this->model->buildQuery([
             'columns' => ['description'],
         ]);
 
