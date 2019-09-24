@@ -159,7 +159,7 @@ productItemModal.find('.save').on('click', function (event) {
 window.tinymce.PluginManager.add('products', function (editor) {
     editor.addButton('add_product_link', {
         title: 'Продукты',
-        image: 'fa fa-shopping-cart',
+        icon: 'fa fa-shopping-cart',
         onclick: function () {
             editor.focus();
 
@@ -182,7 +182,7 @@ window.tinymce.PluginManager.add('products', function (editor) {
 
     editor.addButton('add_product_button', {
         title: 'Продуктовая кнопка',
-        image: 'fa fa-money-bill-alt',
+        icon: 'fa fa-money-bill-alt',
         onclick: function () {
             editor.focus();
 
