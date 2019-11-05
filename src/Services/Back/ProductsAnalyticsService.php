@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Spatie\Analytics\Period;
 use Illuminate\Support\Collection;
 use Spatie\Analytics\AnalyticsFacade;
+use InetStudio\Products\Models\ProductableModel;
 use InetStudio\Products\Contracts\Services\Back\ProductsAnalyticsServiceContract;
 
 /**
@@ -63,6 +64,25 @@ class ProductsAnalyticsService implements ProductsAnalyticsServiceContract
         $productsViews = $this->prepareData($rows);
 
         return $productsViews;
+    }
+
+    /**
+     * Получаем количество упоминаний бренда.
+     *
+     * @return Collection
+     */
+    public function getBrandsReferences(): Collection
+    {
+        $productables = ProductableModel::with(['product' => function ($productQuery) {
+            $productQuery->select(['id', 'brand']);
+        }])->has('product')->select(['product_model_id'])->get();
+
+        return $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
+            return [mb_strtoupper($key) => [
+                'brand' => $key,
+                'references' => $item->count(),
+            ]];
+        });
     }
 
     /**

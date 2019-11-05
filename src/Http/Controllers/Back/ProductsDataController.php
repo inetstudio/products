@@ -69,21 +69,11 @@ class ProductsDataController extends Controller implements ProductsDataControlle
      */
     public function dataBrands(Request $request, ProductsAnalyticsServiceContract $analytics)
     {
-        $productables = ProductableModel::with(['product' => function ($productQuery) {
-            $productQuery->select(['id', 'brand']);
-        }])->has('product')->select(['product_model_id'])->get();
-
-        $items = $productables->groupBy('product.brand')->mapWithKeys(function ($item, $key) {
-            return [mb_strtoupper($key) => [
-                'brand' => $key,
-                'references' => $item->count(),
-            ]];
-        });
-
+        $brandsReferences = $analytics->getBrandsReferences();
         $productsClicks = $analytics->getProductsClicks($request);
         $productsViews = $analytics->getProductsViews($request);
 
-        $items = $items->mapWithKeys(function ($item, $key) use ($productsViews, $productsClicks) {
+        $items = $brandsReferences->mapWithKeys(function ($item, $key) use ($productsViews, $productsClicks) {
             if ($productsViews->has($key)) {
                 $item['views'] = $productsViews->get($key);
             }
