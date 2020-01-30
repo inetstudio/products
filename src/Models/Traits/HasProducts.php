@@ -41,8 +41,6 @@ trait HasProducts
      * Attach the given product(s) to the model.
      *
      * @param int|string|array|\ArrayAccess|ProductModel $products
-     *
-     * @return void
      */
     public function setProductsAttribute($products)
     {
@@ -57,8 +55,6 @@ trait HasProducts
 
     /**
      * Boot the productable trait for a model.
-     *
-     * @return void
      */
     public static function bootHasProducts()
     {
@@ -318,8 +314,6 @@ trait HasProducts
      *
      * @param int|string|array|\ArrayAccess|ProductModel $products
      * @param string $action
-     *
-     * @return void
      */
     protected function setProducts($products, string $action)
     {

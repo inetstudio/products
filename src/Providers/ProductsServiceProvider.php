@@ -13,8 +13,6 @@ class ProductsServiceProvider extends ServiceProvider
 {
     /**
      * Загрузка сервиса.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -28,8 +26,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация команд.
-     *
-     * @return void
      */
     protected function registerConsoleCommands(): void
     {
@@ -45,8 +41,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация ресурсов.
-     *
-     * @return void
      */
     protected function registerPublishes(): void
     {
@@ -70,8 +64,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация путей.
-     *
-     * @return void
      */
     protected function registerRoutes(): void
     {
@@ -80,8 +72,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация представлений.
-     *
-     * @return void
      */
     protected function registerViews(): void
     {
@@ -90,8 +80,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация компонентов форм.
-     *
-     * @return void
      */
     protected function registerFormComponents()
     {
@@ -100,8 +88,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Регистрация директив blade.
-     *
-     * @return void
      */
     protected function registerBladeDirectives()
     {

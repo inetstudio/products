@@ -12,18 +12,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
 
-class ProductModel extends Model implements ProductModelContract, HasMedia, FavoritableContract, Auditable
+class ProductModel extends Model implements ProductModelContract, HasMedia, Auditable
 {
     use HasImages;
     use Searchable;
     use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
     use HasSimpleCountersTrait;
-    use \InetStudio\Favorites\Models\Traits\Favoritable;
     use BuildQueryScopeTrait;
 
     protected $images = [

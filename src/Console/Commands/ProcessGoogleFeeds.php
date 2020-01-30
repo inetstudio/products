@@ -28,8 +28,6 @@ class ProcessGoogleFeeds extends Command
 
     /**
      * Запуск команды.
-     *
-     * @return void
      */
     public function handle(): void
     {

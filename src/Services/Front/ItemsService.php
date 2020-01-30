@@ -5,7 +5,6 @@ namespace InetStudio\Products\Services\Front;
 use Illuminate\Support\Collection;
 use InetStudio\AdminPanel\Base\Services\BaseService;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
-use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
 use InetStudio\Products\Contracts\Services\Front\ItemsServiceContract;
 
 /**
@@ -13,13 +12,6 @@ use InetStudio\Products\Contracts\Services\Front\ItemsServiceContract;
  */
 class ItemsService extends BaseService implements ItemsServiceContract
 {
-    use FavoritesServiceTrait;
-
-    /**
-     * @var string
-     */
-    protected $favoritesType = 'product';
-
     /**
      * ProductsService constructor.
      *

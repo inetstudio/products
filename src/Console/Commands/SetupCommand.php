@@ -33,8 +33,6 @@ class SetupCommand extends Command
 
     /**
      * Запуск команды.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -63,8 +61,6 @@ class SetupCommand extends Command
 
     /**
      * Инициализация команд.
-     *
-     * @return void
      */
     private function initCommands(): void
     {
@@ -96,11 +92,6 @@ class SetupCommand extends Command
                     '--provider' => 'InetStudio\Products\Providers\ProductsServiceProvider',
                     '--tag' => 'config',
                 ],
-            ],
-            [
-                'type' => 'cli',
-                'description' => 'Composer dump',
-                'command' => 'composer dump-autoload',
             ],
         ];
     }
