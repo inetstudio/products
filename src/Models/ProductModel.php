@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Products\Contracts\Models\ProductModelContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use InetStudio\AdminPanel\Base\Models\Traits\HasDynamicRelations;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
 
@@ -20,9 +21,10 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Audi
     use HasImages;
     use Searchable;
     use SoftDeletes;
-    use \OwenIt\Auditing\Auditable;
-    use HasSimpleCountersTrait;
+    use HasDynamicRelations;
     use BuildQueryScopeTrait;
+    use HasSimpleCountersTrait;
+    use \OwenIt\Auditing\Auditable;
 
     protected $images = [
         'config' => 'products',
