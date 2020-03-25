@@ -77,7 +77,7 @@ class ProductModel extends Model implements ProductModelContract, HasMedia, Audi
 
         self::$buildQueryScopeDefaults['relations'] = [
             'media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'conversions_disk', 'uuid']);
             },
 
             'links' => function ($linksQuery) {

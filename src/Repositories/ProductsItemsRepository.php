@@ -23,7 +23,7 @@ class ProductsItemsRepository extends BaseRepository implements ProductsItemsRep
         $this->defaultColumns = ['id', 'title', 'content'];
         $this->relations = [
             'media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'mime_type', 'custom_properties']);
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'conversions_disk', 'uuid', 'mime_type', 'custom_properties']);
             },
         ];
     }

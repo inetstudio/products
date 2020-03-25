@@ -104,7 +104,7 @@ class ProductsDataController extends Controller implements ProductsDataControlle
     {
         $items = ProductableModel::with(['product' => function ($productQuery) {
             $productQuery->with(['media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'conversions_disk', 'uuid']);
             }])
                 ->select(['id', 'brand', 'title']);
         }, 'productable'])
@@ -132,7 +132,7 @@ class ProductsDataController extends Controller implements ProductsDataControlle
     public function dataBrandUnlinked(string $brand)
     {
         $items = ProductModel::with(['media' => function ($query) {
-            $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'conversions_disk', 'uuid']);
         }])
             ->select(['id', 'brand', 'title', 'created_at', 'updated_at'])
             ->where('brand', $brand)
