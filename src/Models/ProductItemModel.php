@@ -7,6 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
+use InetStudio\WidgetsPackage\Widgets\Models\Traits\HasWidgets;
 use InetStudio\Products\Contracts\Models\ProductItemModelContract;
 
 /**
@@ -15,6 +16,7 @@ use InetStudio\Products\Contracts\Models\ProductItemModelContract;
 class ProductItemModel extends Model implements ProductItemModelContract, HasMedia, Auditable
 {
     use HasImages;
+    use HasWidgets;
     use SoftDeletes;
     use \OwenIt\Auditing\Auditable;
 
