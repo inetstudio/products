@@ -45,133 +45,135 @@ class ProcessGoogleFeeds extends Command
                     $contents = file_get_contents($url, false, $context);
                 } catch (\Exception $e) {
                     $this->error('Фид недоступен: '.$url);
-                } finally {
-                    $contents = str_replace(['&nbsp;', 'nbsp'], [' ', ' '], $contents);
-                    $xml = simplexml_load_string($contents);
+                }
 
-                    $products = [];
+                if (! isset($contents)) {
+                    continue;
+                }
 
-                    $bar = $this->output->createProgressBar(count($xml->channel->item));
+                $contents = str_replace(['&nbsp;', 'nbsp'], [' ', ' '], $contents);
+                $xml = simplexml_load_string($contents);
 
-                    foreach ($xml->channel->item as $item) {
-                        $isModified = false;
-                        $isNew = false;
+                $products = [];
 
-                        $product = $item->children('g', true);
+                $bar = $this->output->createProgressBar(count($xml->channel->item));
 
-                        $savedProduct = $this->getProduct($feedHash, trim($product->id));
-                        if ($savedProduct && $savedProduct->update == 0) {
-                            $products[] = $savedProduct->g_id;
+                foreach ($xml->channel->item as $item) {
+                    $isModified = false;
+                    $isNew = false;
 
-                            continue;
-                        }
+                    $product = $item->children('g', true);
 
-                        $products[] = trim($product->id);
+                    $savedProduct = $this->getProduct($feedHash, trim($product->id));
+                    if ($savedProduct && $savedProduct->update == 0) {
+                        $products[] = $savedProduct->g_id;
 
-                        $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
-                        if ($deleteProduct) {
-                            $deleteProduct->restore();
-
-                            $isModified = true;
-                        }
-
-                        $productObj = ProductModel::where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
-
-                        $productData = [
-                            'feed_hash' => $feedHash,
-                            'g_id' => trim($product->id),
-                            'title' => (isset($product->title)) ? trim($product->title) : ((isset($item->title)) ? trim($item->title) : ''),
-                            'description' => (isset($product->description)) ? trim($product->description) : ((isset($item->description)) ? trim($item->description) : ''),
-                            'price' => (isset($product->price)) ? trim($product->price) : ((isset($item->price)) ? trim($item->price) : ''),
-                            'condition' => (isset($product->condition)) ? trim($product->condition) : ((isset($item->condition)) ? trim($item->condition) : ''),
-                            'availability' => (isset($product->availability)) ? trim($product->availability) : ((isset($item->availability)) ? trim($item->availability) : ''),
-                            'brand' => (isset($product->brand)) ? trim($product->brand) : ((isset($item->brand)) ? trim($item->brand) : ''),
-                            'product_type' => (isset($product->product_type)) ? trim($product->product_type) : ((isset($item->product_type)) ? trim($item->product_type) : ''),
-                        ];
-
-                        if ($productObj) {
-                            $productObj->fill($productData);
-
-                            $isModified = $productObj->isDirty();
-
-                            $productObj->save();
-                        } else {
-                            $productObj = ProductModel::create($productData);
-
-                            $isNew = true;
-                        }
-
-                        $imageLink = (isset($product->image_link)) ? trim($product->image_link) : ((isset($item->image_link)) ? trim($item->image_link) : '');
-                        if ($imageLink) {
-                            if (! $productObj->hasMedia('preview')) {
-                                $tempFile = $tempPath.'/'.basename($imageLink);
-
-                                $this->grabImage($imageLink, $tempFile);
-
-                                try {
-                                    $media = $productObj
-                                        ->addMedia($tempFile)
-                                        ->withCustomProperties(['source' => $imageLink])
-                                        ->toMediaCollection('preview', 'products');
-
-                                    $media->custom_properties = [
-                                        'processed' => true,
-                                        'source' => $imageLink,
-                                    ];
-                                    $media->save();
-
-                                    event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
-                                        'object' => $productObj,
-                                        'collection' => 'preview',
-                                    ]));
-
-                                    $isModified = true;
-                                } catch (\Exception $error) {
-                                    $this->info(PHP_EOL.'Image error: '.$imageLink);
-                                }
-                            } else {
-                                if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
-                                    $productObj->clearMediaCollection('preview');
-                                    continue;
-                                }
-                            }
-                        }
-
-                        $isLinksModified = false;
-                        if (isset($product->link) || isset($item->link)) {
-                            $productLink = (isset($product->link)) ? $product->link : ((isset($item->link)) ? $item->link : '');
-                            if ($productLink) {
-                                $isLinksModified = $this->createLinks($productObj, [trim($productLink)]);
-                            }
-                        } elseif (isset($product->links)) {
-                            $productLinks = [];
-                            foreach ($product->links->link as $link) {
-                                $productLinks[] = trim($link->href);
-                            }
-
-                            $isLinksModified = $this->createLinks($productObj, $productLinks);
-                        }
-
-                        if ($isLinksModified) {
-                            $isModified = true;
-                        }
-
-                        if (! $isNew && $isModified) {
-                            event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
-                                'object' => $productObj,
-                            ]));
-                        }
-
-                        $bar->advance();
+                        continue;
                     }
 
-                    $bar->finish();
+                    $products[] = trim($product->id);
 
-                    $this->deleteProducts($feedHash, $products);
+                    $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
+                    if ($deleteProduct) {
+                        $deleteProduct->restore();
+
+                        $isModified = true;
+                    }
+
+                    $productObj = ProductModel::where('feed_hash', $feedHash)->where('g_id', trim($product->id))->first();
+
+                    $productData = [
+                        'feed_hash' => $feedHash,
+                        'g_id' => trim($product->id),
+                        'title' => (isset($product->title)) ? trim($product->title) : ((isset($item->title)) ? trim($item->title) : ''),
+                        'description' => (isset($product->description)) ? trim($product->description) : ((isset($item->description)) ? trim($item->description) : ''),
+                        'price' => (isset($product->price)) ? trim($product->price) : ((isset($item->price)) ? trim($item->price) : ''),
+                        'condition' => (isset($product->condition)) ? trim($product->condition) : ((isset($item->condition)) ? trim($item->condition) : ''),
+                        'availability' => (isset($product->availability)) ? trim($product->availability) : ((isset($item->availability)) ? trim($item->availability) : ''),
+                        'brand' => (isset($product->brand)) ? trim($product->brand) : ((isset($item->brand)) ? trim($item->brand) : ''),
+                        'product_type' => (isset($product->product_type)) ? trim($product->product_type) : ((isset($item->product_type)) ? trim($item->product_type) : ''),
+                    ];
+
+                    if ($productObj) {
+                        $productObj->fill($productData);
+
+                        $isModified = $productObj->isDirty();
+
+                        $productObj->save();
+                    } else {
+                        $productObj = ProductModel::create($productData);
+
+                        $isNew = true;
+                    }
+
+                    $imageLink = (isset($product->image_link)) ? trim($product->image_link) : ((isset($item->image_link)) ? trim($item->image_link) : '');
+                    if ($imageLink) {
+                        if (! $productObj->hasMedia('preview')) {
+                            $tempFile = $tempPath.'/'.basename($imageLink);
+
+                            $this->grabImage($imageLink, $tempFile);
+
+                            try {
+                                $media = $productObj
+                                    ->addMedia($tempFile)
+                                    ->withCustomProperties(['source' => $imageLink])
+                                    ->toMediaCollection('preview', 'products');
+
+                                $media->custom_properties = [
+                                    'processed' => true,
+                                    'source' => $imageLink,
+                                ];
+                                $media->save();
+
+                                event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
+                                    'object' => $productObj,
+                                    'collection' => 'preview',
+                                ]));
+
+                                $isModified = true;
+                            } catch (\Exception $error) {
+                                $this->info(PHP_EOL.'Image error: '.$imageLink);
+                            }
+                        } else {
+                            if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
+                                $productObj->clearMediaCollection('preview');
+                                continue;
+                            }
+                        }
+                    }
+
+                    $isLinksModified = false;
+                    if (isset($product->link) || isset($item->link)) {
+                        $productLink = (isset($product->link)) ? $product->link : ((isset($item->link)) ? $item->link : '');
+                        if ($productLink) {
+                            $isLinksModified = $this->createLinks($productObj, [trim($productLink)]);
+                        }
+                    } elseif (isset($product->links)) {
+                        $productLinks = [];
+                        foreach ($product->links->link as $link) {
+                            $productLinks[] = trim($link->href);
+                        }
+
+                        $isLinksModified = $this->createLinks($productObj, $productLinks);
+                    }
+
+                    if ($isLinksModified) {
+                        $isModified = true;
+                    }
+
+                    if (! $isNew && $isModified) {
+                        event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
+                            'object' => $productObj,
+                        ]));
+                    }
+
+                    $bar->advance();
                 }
+
+                $bar->finish();
+
+                $this->deleteProducts($feedHash, $products);
             }
-
-
         }
     }
 

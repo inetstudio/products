@@ -45,114 +45,118 @@ class ProcessYandexFeeds extends Command
                     $contents = file_get_contents($url, false, $context);
                 } catch (\Exception $e) {
                     $this->error('Фид недоступен: '.$url);
-                } finally {
-                    $xml = simplexml_load_string($contents);
+                }
 
-                    $products = [];
+                if (! isset($contents)) {
+                    continue;
+                }
 
-                    foreach ($xml->shop->offers->offer as $product) {
-                        $isModified = false;
-                        $isNew = false;
+                $xml = simplexml_load_string($contents);
 
-                        $savedProduct = $this->getProduct($feedHash, trim($product->vendorCode));
-                        if ($savedProduct && $savedProduct->update == 0) {
-                            $products[] = $savedProduct->g_id;
+                $products = [];
 
-                            continue;
-                        }
+                foreach ($xml->shop->offers->offer as $product) {
+                    $isModified = false;
+                    $isNew = false;
 
-                        $products[] = trim($product->vendorCode);
+                    $savedProduct = $this->getProduct($feedHash, trim($product->vendorCode));
+                    if ($savedProduct && $savedProduct->update == 0) {
+                        $products[] = $savedProduct->g_id;
 
-                        $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
-                        if ($deleteProduct) {
-                            $deleteProduct->restore();
+                        continue;
+                    }
 
-                            $isModified = true;
-                        }
+                    $products[] = trim($product->vendorCode);
 
-                        $productObj = ProductModel::where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
+                    $deleteProduct = ProductModel::onlyTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
+                    if ($deleteProduct) {
+                        $deleteProduct->restore();
 
-                        $productData = [
-                            'feed_hash' => $feedHash,
-                            'g_id' => trim($product->vendorCode),
-                            'title' => isset($product->model) ? trim($product->model) : '',
-                            'description' => isset($product->description) ? trim($product->description) : '',
-                            'brand' => isset($product->vendor) ? trim($product->vendor) : '',
-                        ];
+                        $isModified = true;
+                    }
 
-                        if ($productObj) {
-                            $productObj->fill($productData);
+                    $productObj = ProductModel::where('feed_hash', $feedHash)->where('g_id', trim($product->vendorCode))->first();
 
-                            $isModified = $productObj->isDirty();
+                    $productData = [
+                        'feed_hash' => $feedHash,
+                        'g_id' => trim($product->vendorCode),
+                        'title' => isset($product->model) ? trim($product->model) : '',
+                        'description' => isset($product->description) ? trim($product->description) : '',
+                        'brand' => isset($product->vendor) ? trim($product->vendor) : '',
+                    ];
 
-                            $productObj->save();
-                        } else {
-                            $productObj = ProductModel::create($productData);
+                    if ($productObj) {
+                        $productObj->fill($productData);
 
-                            $isNew = true;
-                        }
+                        $isModified = $productObj->isDirty();
 
-                        $imageLink = isset($product->picture) ? trim($product->picture) : '';
-                        if ($imageLink) {
-                            if (! $productObj->hasMedia('preview')) {
-                                $tempFile = $tempPath.'/'.basename($imageLink);
+                        $productObj->save();
+                    } else {
+                        $productObj = ProductModel::create($productData);
 
-                                $this->grabImage($imageLink, $tempFile);
+                        $isNew = true;
+                    }
 
-                                $media = $productObj
-                                    ->addMedia($tempFile)
-                                    ->withCustomProperties(['source' => $imageLink])
-                                    ->toMediaCollection('preview', 'products');
+                    $imageLink = isset($product->picture) ? trim($product->picture) : '';
+                    if ($imageLink) {
+                        if (! $productObj->hasMedia('preview')) {
+                            $tempFile = $tempPath.'/'.basename($imageLink);
 
-                                $media->custom_properties = [
-                                    'processed' => true,
-                                    'source' => $imageLink,
-                                ];
-                                $media->save();
+                            $this->grabImage($imageLink, $tempFile);
 
-                                event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
-                                    'object' => $productObj,
-                                    'collection' => 'preview',
-                                ]));
+                            $media = $productObj
+                                ->addMedia($tempFile)
+                                ->withCustomProperties(['source' => $imageLink])
+                                ->toMediaCollection('preview', 'products');
 
-                                $isModified = true;
-                            } else {
-                                if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
-                                    $productObj->clearMediaCollection('preview');
-                                    continue;
-                                }
-                            }
-                        }
+                            $media->custom_properties = [
+                                'processed' => true,
+                                'source' => $imageLink,
+                            ];
+                            $media->save();
 
-                        $isLinksModified = false;
-
-                        if (isset($product->url)) {
-                            $productLink = isset($product->url) ? $product->url : '';
-                            if ($productLink) {
-                                $isLinksModified = $this->createLinks($productObj, [trim($productLink)]);
-                            }
-                        } elseif (isset($product->links)) {
-                            $productLinks = [];
-                            foreach ($product->links->link as $link) {
-                                $productLinks[] = trim($link->href);
-                            }
-
-                            $isLinksModified = $this->createLinks($productObj, $productLinks);
-                        }
-
-                        if ($isLinksModified) {
-                            $isModified = true;
-                        }
-
-                        if (! $isNew && $isModified) {
-                            event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
+                            event(app()->makeWith('InetStudio\Uploads\Contracts\Events\Back\UpdateUploadEventContract', [
                                 'object' => $productObj,
+                                'collection' => 'preview',
                             ]));
+
+                            $isModified = true;
+                        } else {
+                            if (! $productObj->getFirstMedia('preview')->hasCustomProperty('processed')) {
+                                $productObj->clearMediaCollection('preview');
+                                continue;
+                            }
                         }
                     }
 
-                    $this->deleteProducts($feedHash, $products);
+                    $isLinksModified = false;
+
+                    if (isset($product->url)) {
+                        $productLink = isset($product->url) ? $product->url : '';
+                        if ($productLink) {
+                            $isLinksModified = $this->createLinks($productObj, [trim($productLink)]);
+                        }
+                    } elseif (isset($product->links)) {
+                        $productLinks = [];
+                        foreach ($product->links->link as $link) {
+                            $productLinks[] = trim($link->href);
+                        }
+
+                        $isLinksModified = $this->createLinks($productObj, $productLinks);
+                    }
+
+                    if ($isLinksModified) {
+                        $isModified = true;
+                    }
+
+                    if (! $isNew && $isModified) {
+                        event(app()->makeWith('InetStudio\Products\Contracts\Events\Back\ModifyProductEventContract', [
+                            'object' => $productObj,
+                        ]));
+                    }
                 }
+
+                $this->deleteProducts($feedHash, $products);
             }
         }
     }
