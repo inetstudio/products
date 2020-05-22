@@ -43,6 +43,7 @@ class ProcessYandexFeeds extends Command
 
                 try {
                     $contents = file_get_contents($url, false, $context);
+                    $contents = $this->utf8_for_xml($contents);
                 } catch (\Exception $e) {
                     $this->error('Фид недоступен: '.$url);
                 }
@@ -244,6 +245,11 @@ class ProcessYandexFeeds extends Command
         $product = ProductModel::withTrashed()->where('feed_hash', $feedHash)->where('g_id', trim($productId))->first();
 
         return $product;
+    }
+
+    private function utf8_for_xml($string)
+    {
+        return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
     }
 
     /**
