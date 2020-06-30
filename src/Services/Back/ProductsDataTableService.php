@@ -54,8 +54,8 @@ class ProductsDataTableService extends DataTable implements ProductsDataTableSer
     {
         $query = $this->model->buildQuery([
             'columns' => ['created_at', 'updated_at'],
-            'relations' => ['media'],
-        ]);
+            'relations' => ['media', 'links'],
+        ])->has('links');
 
         return $query;
     }

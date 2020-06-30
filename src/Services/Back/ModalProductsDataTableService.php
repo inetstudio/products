@@ -54,7 +54,8 @@ class ModalProductsDataTableService extends DataTable implements ModalProductsDa
     {
         $query = $this->model->buildQuery([
             'columns' => ['description'],
-        ]);
+            'relations' => ['media', 'links'],
+        ])->has('links');
 
         return $query;
     }
