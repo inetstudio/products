@@ -185,6 +185,10 @@ class ProcessYandexFeeds extends Command
         }
 
         foreach ($links as $link) {
+            if (! $link) {
+                continue;
+            }
+
             $productObjectLink = ProductLinkModel::where('product_id', $productObject->id)->where('link', $link)->first();
 
             $linkData = [
