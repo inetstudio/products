@@ -54,7 +54,8 @@ class EmbeddedProductsDataTableService extends DataTable implements EmbeddedProd
     {
         $query = $this->model->buildQuery([
             'columns' => ['description'],
-        ]);
+            'relations' => ['media', 'links'],
+        ])->has('links');
 
         return $query;
     }
