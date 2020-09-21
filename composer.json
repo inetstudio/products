@@ -10,8 +10,8 @@
       }
     ],
     "require": {
-      "inetstudio/simple-counters": "^7.0",
-      "inetstudio/widgets": "^7.0",
+      "inetstudio/simple-counters": "^8.0",
+      "inetstudio/widgets": "^8.0",
       "spatie/laravel-analytics": "^3.9"
     },
     "autoload": {
