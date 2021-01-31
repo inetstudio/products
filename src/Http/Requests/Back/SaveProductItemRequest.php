@@ -21,58 +21,60 @@ class SaveProductItemRequest extends FormRequest implements SaveProductItemReque
         return true;
     }
 
-    /**
-     * Сообщения об ошибках.
-     *
-     * @return array
-     */
     public function messages(): array
     {
-        $previewCrops = config('products.images.crops.product_item.preview') ?? [];
-
-        $cropMessages = [];
-
-        foreach ($previewCrops as $previewCrop) {
-            $cropMessages['preview.crop.'.$previewCrop['name'].'.required'] = 'Необходимо выбрать область отображения '.$previewCrop['ratio'];
-            $cropMessages['preview.crop.'.$previewCrop['name'].'.json'] = 'Область отображения '.$previewCrop['ratio'].' должна быть представлена в виде JSON';
-        }
-
-        return array_merge([
+        $messages = [
             'title.required' => 'Поле «Заголовок» обязательно для заполнения',
             'title.max' => 'Поле «Заголовок» не должно превышать 255 символов',
+        ];
 
-            'preview.file.required' => 'Поле «Превью» обязательно для заполнения',
-            'preview.description.max' => 'Поле «Описание» не должно превышать 255 символов',
-            'preview.copyright.max' => 'Поле «Copyright» не должно превышать 255 символов',
-            'preview.alt.required' => 'Поле «Alt» обязательно для заполнения',
-            'preview.alt.max' => 'Поле «Alt» не должно превышать 255 символов',
-        ], $cropMessages);
-    }
+        if ($this->input('preview.filepath')) {
+            $previewCrops = config('products.images.crops.product_item.preview') ?? [];
 
-    /**
-     * Правила проверки запроса.
-     *
-     * @return array
-     */
-    public function rules(): array
-    {
-        $previewCrops = config('products.images.crops.product_item.preview') ?? [];
+            $cropMessages = [];
 
-        $cropRules = [];
+            foreach ($previewCrops as $previewCrop) {
+                $cropMessages['preview.crop.'.$previewCrop['name'].'.required'] = 'Необходимо выбрать область отображения '.$previewCrop['ratio'];
+                $cropMessages['preview.crop.'.$previewCrop['name'].'.json'] = 'Область отображения '.$previewCrop['ratio'].' должна быть представлена в виде JSON';
+            }
 
-        foreach ($previewCrops as $previewCrop) {
-            $cropRules['preview.crop.'.$previewCrop['name']] = [
-                'nullable', 'json',
-                new CropSize($previewCrop['size']['width'], $previewCrop['size']['height'], $previewCrop['size']['type'], $previewCrop['title']),
-            ];
+            $messages = array_merge($messages, [
+                'preview.file.required' => 'Поле «Превью» обязательно для заполнения',
+                'preview.description.max' => 'Поле «Описание» не должно превышать 255 символов',
+                'preview.copyright.max' => 'Поле «Copyright» не должно превышать 255 символов',
+                'preview.alt.required' => 'Поле «Alt» обязательно для заполнения',
+                'preview.alt.max' => 'Поле «Alt» не должно превышать 255 символов',
+            ], $cropMessages);
         }
 
-        return array_merge([
-            'title' => 'required|max:255',
+        return $messages;
+    }
 
-            'preview.description' => 'max:255',
-            'preview.copyright' => 'max:255',
-            'preview.alt' => 'required|max:255',
-        ], $cropRules);
+    public function rules(): array
+    {
+        $rules = [
+            'title' => 'required|max:255',
+        ];
+
+        if ($this->input('preview.filepath')) {
+            $previewCrops = config('products.images.crops.product_item.preview') ?? [];
+
+            $cropRules = [];
+
+            foreach ($previewCrops as $previewCrop) {
+                $cropRules['preview.crop.'.$previewCrop['name']] = [
+                    'nullable', 'json',
+                    new CropSize($previewCrop['size']['width'], $previewCrop['size']['height'], $previewCrop['size']['type'], $previewCrop['title']),
+                ];
+            }
+
+            $rules = array_merge($rules, [
+                'preview.description' => 'max:255',
+                'preview.copyright' => 'max:255',
+                'preview.alt' => 'max:255',
+            ], $cropRules);
+        }
+
+        return $rules;
     }
 }
