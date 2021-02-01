@@ -79,6 +79,8 @@ $(document).ready(function() {
             images: modal.find('.preview img').get(0)
         });
 
+        modal.find('.delete').hide();
+
         Admin.containers.images['modal_product_item_content'].images = [];
     });
 
