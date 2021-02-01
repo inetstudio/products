@@ -75,6 +75,8 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
                     productItemModal.find('[name="preview[description]"]').val(data.preview.additional_info.description);
                     productItemModal.find('[name="preview[copyright]"]').val(data.preview.additional_info.copyright);
                     productItemModal.find('[name="preview[alt]"]').val(data.preview.additional_info.alt);
+
+                    productItemModal.find('.delete').show();
                 }
 
                 productItemModal.find('.additional_fields').show();
