@@ -64,7 +64,7 @@ $(document).ready(function() {
         modal.find('input[name=_method]').val('POST');
         modal.find('input[name=product_item_id]').val('');
 
-        modal.find('input').filter('[name!=_token][name!=_method][name!=product_item_id]').val('');
+        modal.find('input').filter('[name!=_token][name!=_method][name!=product_item_id][name!=has_images]').val('');
 
         window.tinymce.get('modal_product_item_content').setContent('');
 
