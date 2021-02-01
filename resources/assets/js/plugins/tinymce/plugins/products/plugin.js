@@ -65,6 +65,9 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
                 if (data.preview) {
                     productItemModal.find('.preview img').removeAttr('data-src').attr('src', data.preview.filepath);
 
+                    productItemModal.find('.image_filepath').val(data.preview.filepath);
+                    productItemModal.find('.image_filename').val(data.preview.filename);
+
                     productItemModal.find('.crop_buttons').show();
                     productItemModal.find('.start-cropper').removeClass('btn-default').addClass('btn-primary');
                     productItemModal.find('[name="preview[crop][vertical]"]').val(JSON.stringify(data.preview.crop));
