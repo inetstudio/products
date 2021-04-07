@@ -62,16 +62,24 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
                 productItemModal.find('input[name=title]').val(data.title);
                 window.tinymce.get('modal_product_item_content').setContent(data.content);
 
-                productItemModal.find('.preview img').removeAttr('data-src').attr('src', data.preview.filepath);
+                if (data.preview) {
+                    productItemModal.find('.preview img').removeAttr('data-src').attr('src', data.preview.filepath);
 
-                productItemModal.find('.crop_buttons').show();
-                productItemModal.find('.start-cropper').removeClass('btn-default').addClass('btn-primary');
-                productItemModal.find('[name="preview[crop][vertical]"]').val(JSON.stringify(data.preview.crop));
+                    productItemModal.find('.image_filepath').val(data.preview.filepath);
+                    productItemModal.find('.image_filename').val(data.preview.filename);
 
-                productItemModal.find('[name="preview[description]"]').val(data.preview.additional_info.description);
-                productItemModal.find('[name="preview[copyright]"]').val(data.preview.additional_info.copyright);
-                productItemModal.find('[name="preview[alt]"]').val(data.preview.additional_info.alt);
-                productItemModal.find('.additional_fields').show();
+                    productItemModal.find('.crop_buttons').show();
+                    productItemModal.find('.start-cropper').removeClass('btn-default').addClass('btn-primary');
+                    productItemModal.find('[name="preview[crop][vertical]"]').val(JSON.stringify(data.preview.crop));
+
+                    productItemModal.find('[name="preview[description]"]').val(data.preview.additional_info.description);
+                    productItemModal.find('[name="preview[copyright]"]').val(data.preview.additional_info.copyright);
+                    productItemModal.find('[name="preview[alt]"]').val(data.preview.additional_info.alt);
+
+                    productItemModal.find('.delete').show();
+
+                    productItemModal.find('.additional_fields').show();
+                }
 
                 Admin.containers.images['modal_product_item_content'].images = data.content_images;
 

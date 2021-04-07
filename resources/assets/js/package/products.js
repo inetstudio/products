@@ -64,7 +64,7 @@ $(document).ready(function() {
         modal.find('input[name=_method]').val('POST');
         modal.find('input[name=product_item_id]').val('');
 
-        modal.find('input').filter('[name!=_token][name!=_method][name!=product_item_id]').val('');
+        modal.find('input').filter('[name!=_token][name!=_method][name!=product_item_id][name!=content\\[has_images\\]]').val('');
 
         window.tinymce.get('modal_product_item_content').setContent('');
 
@@ -78,6 +78,8 @@ $(document).ready(function() {
         Holder.run({
             images: modal.find('.preview img').get(0)
         });
+
+        modal.find('.delete').hide();
 
         Admin.containers.images['modal_product_item_content'].images = [];
     });

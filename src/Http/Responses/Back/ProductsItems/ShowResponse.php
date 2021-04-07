@@ -50,11 +50,9 @@ class ShowResponse implements ShowResponseContract, Responsable
      *
      * @return array
      */
-    public function getPreviewImage(): array
+    public function getPreviewImage(): ?array
     {
         $preview = $this->item->getFirstMedia('preview');
-
-        $media = [];
 
         if ($preview) {
             $media = [
@@ -67,6 +65,8 @@ class ShowResponse implements ShowResponseContract, Responsable
                 ],
                 'crop' => $preview->getCustomProperty('crop.vertical'),
             ];
+        } else {
+            return null;
         }
 
         return $media;
