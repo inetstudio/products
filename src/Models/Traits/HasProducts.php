@@ -94,7 +94,7 @@ trait HasProducts
     public function scopeWithAllProducts(Builder $query, $products, string $column = 'id'): Builder
     {
         $products = static::isProductsStringBased($products)
-            ? $products : static::hydrateProducts($products)->pluck($column);
+            ? $products : static::hydrateProducts($products)->pluck($column)->toArray();
 
         collect($products)->each(function ($ingredient) use ($query, $column) {
             $query->whereHas('products', function (Builder $query) use ($ingredient, $column) {
@@ -117,7 +117,7 @@ trait HasProducts
     public function scopeWithAnyProducts(Builder $query, $products, string $column = 'id'): Builder
     {
         $products = static::isProductsStringBased($products)
-            ? $products : static::hydrateProducts($products)->pluck($column);
+            ? $products : static::hydrateProducts($products)->pluck($column)->toArray();
 
         return $query->whereHas('products', function (Builder $query) use ($products, $column) {
             $query->whereIn($column, (array) $products);
@@ -150,7 +150,7 @@ trait HasProducts
     public function scopeWithoutProducts(Builder $query, $products, string $column = 'id'): Builder
     {
         $products = static::isProductsStringBased($products)
-            ? $products : static::hydrateProducts($products)->pluck($column);
+            ? $products : static::hydrateProducts($products)->pluck($column)->toArray();
 
         return $query->whereDoesntHave('products', function (Builder $query) use ($products, $column) {
             $query->whereIn($column, (array) $products);
