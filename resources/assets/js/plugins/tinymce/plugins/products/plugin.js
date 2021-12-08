@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 let productsList = $('#products_list_modal'),
     productItemModal = $('#product_item_modal'),
     template = productsList.find('.product_item-tr-template'),
@@ -91,10 +93,10 @@ productsList.find('table').on('click', '.edit-product_item', function (event) {
         error: function () {
             $('#products_list_modal').find('.widget-content.ibox-content').toggleClass('sk-loading');
 
-            swal({
+            Swal.fire({
                 title: "Ошибка",
                 text: "При получении продукта произошла ошибка",
-                type: "error"
+                icon: "error"
             });
         }
     });
@@ -219,10 +221,10 @@ window.tinymce.PluginManager.add('products', function (editor) {
             contentEditor = editor;
 
             if (content !== '' && ! /<img class="content-widget".+data-type="products.list".+\/>/g.test(content)) {
-                swal({
+                Swal.fire({
                     title: "Ошибка",
                     text: "Необходимо выбрать виджет-подборка",
-                    type: "error"
+                    icon: "error"
                 });
 
                 return false;
