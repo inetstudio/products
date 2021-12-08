@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        bootstrap="vendor/autoload.php"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        colors="true"
+        verbose="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+>
+    <coverage>
+        <include>
+            <directory suffix=".php">entities/links/src</directory>
+            <directory suffix=".php">entities/products/src</directory>
+            <directory suffix=".php">entities/products-items/src</directory>
+            <directory suffix=".php">package/src</directory>
+        </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Links">
+            <directory suffix="Test.php">./entities/links/tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Products">
+            <directory suffix="Test.php">./entities/products/tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Products Items">
+            <directory suffix="Test.php">./entities/products-items/tests/Feature</directory>
+            <directory suffix="Test.php">./entities/products-items/tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

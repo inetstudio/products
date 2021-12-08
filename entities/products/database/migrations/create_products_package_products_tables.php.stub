@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateProductsPackageProductsTables extends Migration
+{
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('feed_hash')->default('');
+            $table->string('brand')->default('');
+            $table->string('g_id')->default('');
+            $table->string('title')->default('');
+            $table->text('description')->nullable();
+            $table->string('price')->default('');
+            $table->string('condition')->default('');
+            $table->string('availability')->default('');
+            $table->string('product_type')->default('');
+            $table->boolean('update')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('productables', function (Blueprint $table) {
+            $table->integer('product_model_id')->unsigned();
+            $table->morphs('productable');
+            $table->timestamps();
+
+            $table->index(['productable_id', 'productable_type']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::drop('productables');
+        Schema::drop('products');
+    }
+}

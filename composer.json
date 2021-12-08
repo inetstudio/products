@@ -10,20 +10,31 @@
       }
     ],
     "require": {
+      "inetstudio/admin-panel": "^8.0",
       "inetstudio/simple-counters": "^8.0",
       "inetstudio/widgets": "^8.0",
       "spatie/laravel-analytics": "^4.0"
     },
     "autoload": {
       "psr-4": {
-        "InetStudio\\Products\\": "src/"
+        "InetStudio\\ProductsPackage\\": "package/src",
+        "InetStudio\\ProductsPackage\\Links\\": "entities/links/src",
+        "InetStudio\\ProductsPackage\\Links\\Tests\\": "entities/links/tests",
+        "InetStudio\\ProductsPackage\\Products\\": "entities/products/src",
+        "InetStudio\\ProductsPackage\\ProductsItems\\": "entities/products-items/src",
+        "InetStudio\\ProductsPackage\\ProductsItems\\Tests\\": "entities/products-items/tests"
       }
     },
     "extra": {
       "laravel": {
         "providers": [
-          "InetStudio\\Products\\Providers\\ProductsBindingsServiceProvider",
-          "InetStudio\\Products\\Providers\\ProductsServiceProvider"
+          "InetStudio\\ProductsPackage\\Providers\\ServiceProvider",
+          "InetStudio\\ProductsPackage\\Links\\Providers\\BindingsServiceProvider",
+          "InetStudio\\ProductsPackage\\Links\\Providers\\ServiceProvider",
+          "InetStudio\\ProductsPackage\\Products\\Providers\\BindingsServiceProvider",
+          "InetStudio\\ProductsPackage\\Products\\Providers\\ServiceProvider",
+          "InetStudio\\ProductsPackage\\ProductsItems\\Providers\\BindingsServiceProvider",
+          "InetStudio\\ProductsPackage\\ProductsItems\\Providers\\ServiceProvider"
         ]
       }
     }
