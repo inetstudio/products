@@ -1,3 +1,5 @@
+import Holder from 'holderjs';
+
 export let products = {
     init: function() {
         $(document).ready(function() {
