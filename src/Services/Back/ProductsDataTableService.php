@@ -2,6 +2,7 @@
 
 namespace InetStudio\Products\Services\Back;
 
+use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Services\DataTable;
@@ -35,7 +36,7 @@ class ProductsDataTableService extends DataTable implements ProductsDataTableSer
      *
      * @throws \Exception
      */
-    public function ajax()
+    public function ajax(): JsonResponse
     {
         $transformer = app()->make('InetStudio\Products\Contracts\Transformers\Back\ProductTransformerContract');
 
